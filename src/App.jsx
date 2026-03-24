@@ -457,6 +457,43 @@ function isVideo(src) {
 }
 
 /* ─────────────────────────────────────
+   SCROLL PROGRESS
+   ───────────────────────────────────── */
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0)
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(h > 0 ? window.scrollY / h : 0)
+    }
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  return <div className="scroll-progress" style={{ width: `${progress * 100}%` }} />
+}
+
+/* ─────────────────────────────────────
+   BACK TO TOP
+   ───────────────────────────────────── */
+function BackToTop() {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 600)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  return (
+    <button
+      className={`back-to-top ${visible ? 'visible' : ''}`}
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="Back to top"
+    >
+      <ArrowUpRight size={18} style={{ transform: 'rotate(-45deg)' }} />
+    </button>
+  )
+}
+
+/* ─────────────────────────────────────
    CUSTOM CURSOR (CSS-only movement)
    ───────────────────────────────────── */
 function CustomCursor() {
@@ -1016,7 +1053,14 @@ function ContactSection() {
             If you're ready to dominate your space, let's talk.
           </p>
 
-          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+          <form className="contact-form" onSubmit={(e) => {
+            e.preventDefault()
+            const form = e.target
+            const name = form.elements[0].value
+            const email = form.elements[1].value
+            const message = form.elements[2].value
+            window.open(`mailto:hello@adaptile.io?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
+          }}>
             <div className="contact-form-row">
               <input type="text" className="contact-input" placeholder="Your Name" />
               <input type="email" className="contact-input" placeholder="Your Email" />
@@ -1052,7 +1096,7 @@ function Footer() {
       <div className="footer-top">
         <div className="footer-brand">
           <span className="footer-logo">Adaptile</span>
-          <span className="footer-tagline">Brand Architecture Studio</span>
+          <span className="footer-tagline">Brand Architecture Studio &middot; Dubai, UAE</span>
         </div>
         <div className="footer-links">
           <a href="#work">Work</a>
@@ -1060,6 +1104,8 @@ function Footer() {
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
           <a href="https://t.me/adaptile" target="_blank" rel="noopener noreferrer">Telegram</a>
+          <a href="https://x.com/adaptile" target="_blank" rel="noopener noreferrer">X</a>
+          <a href="https://instagram.com/adaptile" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </div>
       <div className="footer-bottom">
@@ -1078,18 +1124,22 @@ export default function App() {
   return (
     <>
       <CustomCursor />
+      <ScrollProgress />
 
       {/* Ambient background — pure CSS, no JS */}
       <div className="bg-layer">
         <div className="bg-orb bg-orb-1" />
         <div className="bg-orb bg-orb-2" />
       </div>
+      <div className="grain-overlay" />
 
       <Navbar />
       <Hero />
       <ClientMarquee />
       <About />
+      <div className="section-divider" />
       <WorkSection onSelectBatch={setSelectedBatch} />
+      <div className="section-divider" />
       <TeamSection />
       <Services />
       <ContactSection />
@@ -1100,6 +1150,7 @@ export default function App() {
           <BatchModal batch={selectedBatch} onClose={() => setSelectedBatch(null)} />
         )}
       </AnimatePresence>
+      <BackToTop />
     </>
   )
 }
