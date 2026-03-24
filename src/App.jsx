@@ -861,7 +861,7 @@ function About() {
 
       <div className="about-stats">
         {STATS.map((stat, i) => (
-          <Reveal key={i} delay={i * 0.1}>
+          <Reveal key={i} delay={i * 0.1} className="stat-reveal">
             <div className="stat-card">
               <span className="stat-value"><AnimatedCounter value={stat.value} /></span>
               <span className="stat-label">{stat.label}</span>

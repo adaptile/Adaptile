@@ -856,6 +856,11 @@
   border-right: none;
 }
 
+.stat-reveal {
+  background: var(--bg);
+  height: 100%;
+}
+
 .stat-value {
   font-family: var(--font-display);
   font-size: clamp(40px, 5vw, 64px);
