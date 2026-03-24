@@ -572,7 +572,7 @@ function AnimatedCounter({ value }) {
         }
         requestAnimationFrame(step)
       }
-    }, { rootMargin: '-80px' })
+    }, { rootMargin: '0px', threshold: 0.1 })
     obs.observe(el)
     return () => obs.disconnect()
   }, [value])
