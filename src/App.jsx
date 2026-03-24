@@ -82,6 +82,7 @@ const PROJECTS = [
   },
   {
     id: 'american-party', title: 'America Party', tag: 'Creative Showcase',
+    link: 'https://x.com/AmericaPartyX',
     thumbnail: '/nfts/American%20party/appfp.jpg',
     images: [
       '/nfts/American%20party/030ccc93-7753-4f12-9454-5f182cd5a868.jpg',
