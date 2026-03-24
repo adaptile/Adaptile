@@ -959,7 +959,68 @@ const TEAM = [
   { name: 'Ryan', role: 'Data Analyst', photo: '/ryan-pfp.jpg', bio: '5+ years of experience transforming raw data into actionable business insights. Skilled in writing complex SQL queries using CTEs, window functions, and aggregations to solve problems in revenue analysis, customer analytics, and retention. Built and documented multiple end-to-end projects covering data transformation, quality validation, and business intelligence reporting.' },
 ]
 
+function TeamMemberModal({ member, onClose }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = '' }
+  }, [])
+
+  return (
+    <motion.div
+      className="team-modal-backdrop"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="team-modal"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="team-modal-handle" />
+        <button className="team-modal-close" onClick={onClose} aria-label="Close">
+          <X size={18} />
+        </button>
+        <div className="team-modal-photo">
+          {member.photo ? (
+            <img src={member.photo} alt={member.name} />
+          ) : member.name === 'Yezen' ? (
+            <img src="/founder-pfp.png" alt={member.name} />
+          ) : (
+            <div className="team-card-photo-placeholder">
+              <span>{member.name.split(' ').map(w => w[0]).join('')}</span>
+            </div>
+          )}
+        </div>
+        <div className="team-modal-info">
+          <h3 className="team-modal-name">{member.name}</h3>
+          <span className="team-modal-role">{member.role}</span>
+          <p className="team-modal-bio">{member.bio}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 function TeamSection() {
+  const [selectedMember, setSelectedMember] = useState(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
+  const handleCardClick = (member) => {
+    if (isMobile) setSelectedMember(member)
+  }
+
   return (
     <section id="team" className="team-section">
       <Reveal>
@@ -975,7 +1036,7 @@ function TeamSection() {
       </Reveal>
 
       <Reveal className="team-founder">
-        <div className="team-card">
+        <div className="team-card" onClick={() => handleCardClick(TEAM[0])}>
           <div className="team-card-photo">
             <img src="/founder-pfp.png" alt={TEAM[0].name} className="team-card-photo-img" />
           </div>
@@ -990,7 +1051,7 @@ function TeamSection() {
       <div className="team-grid">
         {TEAM.slice(1).map((member, i) => (
           <Reveal key={i} delay={i * 0.05}>
-            <div className="team-card">
+            <div className="team-card" onClick={() => handleCardClick(member)}>
               <div className="team-card-photo">
                 {member.photo ? (
                   <img src={member.photo} alt={member.name} className="team-card-photo-img" />
@@ -1009,6 +1070,12 @@ function TeamSection() {
           </Reveal>
         ))}
       </div>
+
+      <AnimatePresence>
+        {selectedMember && (
+          <TeamMemberModal member={selectedMember} onClose={() => setSelectedMember(null)} />
+        )}
+      </AnimatePresence>
     </section>
   )
 }
