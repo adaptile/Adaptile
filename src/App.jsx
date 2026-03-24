@@ -499,12 +499,16 @@ function BackToTop() {
    ───────────────────────────────────── */
 function CustomCursor() {
   useEffect(() => {
+    document.body.classList.add('custom-cursor-ready')
     const onMove = (e) => {
       document.documentElement.style.setProperty('--cx', e.clientX + 'px')
       document.documentElement.style.setProperty('--cy', e.clientY + 'px')
     }
     window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      document.body.classList.remove('custom-cursor-ready')
+    }
   }, [])
 
   return (
@@ -908,6 +912,7 @@ function WorkSection({ onSelectBatch }) {
                   src={project.thumbnail}
                   className="work-card-media"
                   autoPlay loop muted playsInline
+                  preload="none"
                 />
               ) : (
                 <img
@@ -1104,7 +1109,10 @@ function Services() {
           <Reveal key={i} delay={i * 0.08}>
             <div
               className={`service-item ${openIdx === i ? 'open' : ''}`}
+              role="button"
+              tabIndex={0}
               onClick={() => setOpenIdx(openIdx === i ? null : i)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenIdx(openIdx === i ? null : i) } }}
             >
               <div className="service-header">
                 <span className="service-num">{service.num}</span>
@@ -1149,16 +1157,17 @@ function ContactSection() {
             const name = form.elements[0].value
             const email = form.elements[1].value
             const message = form.elements[2].value
-            window.open(`mailto:hello@adaptile.io?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
+            window.open(`mailto:hello@adaptile.ae?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
           }}>
             <div className="contact-form-row">
-              <input type="text" className="contact-input" placeholder="Your Name" />
-              <input type="email" className="contact-input" placeholder="Your Email" />
+              <input type="text" className="contact-input" placeholder="Your Name" required />
+              <input type="email" className="contact-input" placeholder="Your Email" required />
             </div>
             <textarea
               className="contact-input contact-textarea"
               placeholder="Tell us about your project..."
               rows={5}
+              required
             />
             <button type="submit" className="contact-submit">
               Send Message <Send size={18} />

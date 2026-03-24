@@ -40,11 +40,14 @@ body {
   background: var(--bg);
   min-height: 100vh;
   overflow-x: hidden;
-  cursor: none;
 }
 
+body.custom-cursor-ready { cursor: none; }
+body.custom-cursor-ready a { cursor: none; }
+body.custom-cursor-ready button { cursor: none; }
+
 a { color: inherit; text-decoration: none; }
-button { font-family: inherit; cursor: none; border: none; background: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 img { max-width: 100%; display: block; }
 ul, ol { list-style: none; }
 
