@@ -701,18 +701,40 @@ function Navbar() {
         </button>
       </nav>
 
-      {mobileOpen && (
-        <div className="mobile-menu">
-          {links.map((l) => (
-            <a key={l.label} href={l.href} onClick={() => setMobileOpen(false)}>
-              {l.label}
-            </a>
-          ))}
-          <a href="#contact" onClick={() => setMobileOpen(false)} className="mobile-menu-cta">
-            Start a Project
-          </a>
-        </div>
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {links.map((l, i) => (
+              <motion.a
+                key={l.label}
+                href={l.href}
+                onClick={() => setMobileOpen(false)}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 + i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {l.label}
+              </motion.a>
+            ))}
+            <motion.a
+              href="#contact"
+              onClick={() => setMobileOpen(false)}
+              className="mobile-menu-cta"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+            >
+              Start a Project
+            </motion.a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }
