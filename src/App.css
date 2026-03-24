@@ -839,17 +839,21 @@
   margin: 80px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
+  gap: 0;
   border: 1px solid var(--border);
 }
 
 .stat-card {
   background: var(--bg);
   padding: 48px 40px;
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.stat-card:last-child {
+  border-right: none;
 }
 
 .stat-value {
