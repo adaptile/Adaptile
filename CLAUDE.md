@@ -11,7 +11,7 @@ Brand architecture studio portfolio website based in Dubai. Single-page React ap
 - **Styling:** Plain CSS with custom properties (no CSS-in-JS, no Tailwind)
 - **Testing:** Playwright
 - **Linting:** ESLint 9 (flat config)
-- **Deployment:** Vercel
+- **Deployment:** Railway (domain: adaptile.ae)
 
 ## Commands
 
@@ -19,18 +19,23 @@ Brand architecture studio portfolio website based in Dubai. Single-page React ap
 - `npm run build` — Production build
 - `npm run preview` — Preview production build
 - `npm run lint` — Run ESLint
+- `npm run start` — Serve production build on port 8080 (`serve dist -s -l 8080`)
 
 ## Project Structure
 
 ```
 src/
   main.jsx          — Entry point, renders <App /> into #root
-  App.jsx           — Entire app (~1100 lines, all components in one file)
-  App.css           — All component styles (~1600 lines)
+  App.jsx           — Entire app (~1255 lines, all components in one file)
+  App.css           — All component styles (~2083 lines)
+  components/       — (empty, reserved for future extraction)
   index.css         — Global/reset styles
 public/
   icons.svg         — SVG sprite
-  nfts/             — Project image assets
+  nfts/             — Project image/video assets (organized by project name)
+  *.jpg/png/svg     — Team profile photos, logos, favicon
+  robots.txt        — Search engine directives
+  sitemap.xml       — Sitemap for SEO
 ```
 
 ## Architecture
@@ -45,7 +50,7 @@ public/
 - **BatchModal** — Full-screen Embla carousel for project galleries
 - **Hero** — Accordion showcasing featured projects
 
-**Data is inline** — project list (16 items), team (9 members), services (4 items), and stats are all defined as arrays at the top of `App.jsx`.
+**Data is inline** — project list (16 items), team (9 members), services (4 items), and stats are all defined as arrays at the top of `App.jsx`. Projects can contain both images (`.jpg`) and videos (`.mp4`).
 
 ## State Management
 
@@ -65,3 +70,6 @@ Minimal — only React `useState` for UI state. No Redux, Zustand, or context pr
 - No external API calls
 - Scroll animations use IntersectionObserver, not scroll event listeners
 - Custom cursor tracks mouse position via CSS variables
+- Team member cards have modal popups on mobile tap
+- SEO: Open Graph, Twitter Cards, and JSON-LD structured data in `index.html`
+- Production served via `serve` package with SPA fallback (`-s` flag)
