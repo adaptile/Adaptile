@@ -1985,6 +1985,27 @@
 
 .contact-alt a:hover { opacity: 0.7; }
 
+.contact-confirmation {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  padding: 40px 0;
+}
+
+.contact-confirmation-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
 @media (max-width: 768px) {
   .contact-section { padding: 60px 16px; }
   .contact-inner {

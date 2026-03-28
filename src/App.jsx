@@ -1158,6 +1158,8 @@ function Services() {
    CONTACT
    ───────────────────────────────────── */
 function ContactSection() {
+  const [submitted, setSubmitted] = useState(false)
+
   return (
     <section id="contact" className="contact-section">
       <Reveal>
@@ -1165,45 +1167,82 @@ function ContactSection() {
           <div className="contact-glow-1" />
           <div className="contact-glow-2" />
 
-          <span className="section-label">Get in Touch</span>
-          <h2 className="contact-headline">
-            Ready to Build<br />
-            Something <em>Remarkable?</em>
-          </h2>
-          <p className="contact-sub">
-            We work with founders, artists, and protocols that refuse to be average.
-            If you're ready to dominate your space, let's talk.
-          </p>
+          <AnimatePresence mode="wait">
+            {submitted ? (
+              <motion.div
+                key="confirmation"
+                className="contact-confirmation"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <div className="contact-confirmation-icon">✓</div>
+                <h2 className="contact-headline">
+                  We've Got Your<br />Vision — <em>Let's Build.</em>
+                </h2>
+                <p className="contact-sub">
+                  Our team is reviewing your project now. Expect a personal response
+                  within 24 hours — great things move fast.
+                </p>
+                <button
+                  className="contact-submit"
+                  onClick={() => setSubmitted(false)}
+                  style={{ marginTop: '24px' }}
+                >
+                  Send Another Message
+                </button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="form"
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <span className="section-label">Get in Touch</span>
+                <h2 className="contact-headline">
+                  Ready to Build<br />
+                  Something <em>Remarkable?</em>
+                </h2>
+                <p className="contact-sub">
+                  We work with founders, artists, and protocols that refuse to be average.
+                  If you're ready to dominate your space, let's talk.
+                </p>
 
-          <form className="contact-form" onSubmit={(e) => {
-            e.preventDefault()
-            const form = e.target
-            const name = form.elements[0].value
-            const email = form.elements[1].value
-            const message = form.elements[2].value
-            window.open(`mailto:zaidan.yezen@gmail.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
-          }}>
-            <div className="contact-form-row">
-              <input type="text" className="contact-input" placeholder="Your Name" required />
-              <input type="email" className="contact-input" placeholder="Your Email" required />
-            </div>
-            <textarea
-              className="contact-input contact-textarea"
-              placeholder="Tell us about your project..."
-              rows={5}
-              required
-            />
-            <button type="submit" className="contact-submit">
-              Send Message <Send size={18} />
-            </button>
-          </form>
+                <form className="contact-form" onSubmit={(e) => {
+                  e.preventDefault()
+                  const form = e.target
+                  const name = form.elements[0].value
+                  const email = form.elements[1].value
+                  const message = form.elements[2].value
+                  window.open(`mailto:zaidan.yezen@gmail.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
+                  form.reset()
+                  setSubmitted(true)
+                }}>
+                  <div className="contact-form-row">
+                    <input type="text" className="contact-input" placeholder="Your Name" required />
+                    <input type="email" className="contact-input" placeholder="Your Email" required />
+                  </div>
+                  <textarea
+                    className="contact-input contact-textarea"
+                    placeholder="Tell us about your project..."
+                    rows={5}
+                    required
+                  />
+                  <button type="submit" className="contact-submit">
+                    Send Message <Send size={18} />
+                  </button>
+                </form>
 
-          <div className="contact-alt">
-            <span>or reach us directly at</span>
-            <a href="https://t.me/adaptile" target="_blank" rel="noopener noreferrer">
-              t.me/adaptile
-            </a>
-          </div>
+                <div className="contact-alt">
+                  <span>or reach us directly at</span>
+                  <a href="https://t.me/adaptile" target="_blank" rel="noopener noreferrer">
+                    t.me/adaptile
+                  </a>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </Reveal>
     </section>
