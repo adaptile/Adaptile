@@ -715,28 +715,52 @@ function Navbar() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {links.map((l, i) => (
-              <motion.a
-                key={l.label}
-                href={l.href}
+            <div className="mobile-menu-header">
+              <a href="#" className="navbar-logo" onClick={() => setMobileOpen(false)}>
+                <img src="/adaptile-logo.jpg" alt="Adaptile" />
+                <span className="navbar-logo-text">Adaptile</span>
+              </a>
+              <button
+                className="mobile-menu-close"
                 onClick={() => setMobileOpen(false)}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.05 + i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                aria-label="Close menu"
               >
-                {l.label}
-              </motion.a>
-            ))}
-            <motion.a
-              href="#contact"
-              onClick={() => setMobileOpen(false)}
-              className="mobile-menu-cta"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.4 }}
+                <X size={24} />
+              </button>
+            </div>
+
+            <nav className="mobile-menu-nav">
+              {links.map((l, i) => (
+                <motion.a
+                  key={l.label}
+                  href={l.href}
+                  onClick={() => setMobileOpen(false)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08 + i * 0.06, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="mobile-menu-index">0{i + 1}</span>
+                  <span className="mobile-menu-label">{l.label}</span>
+                  <ArrowUpRight className="mobile-menu-arrow" size={20} />
+                </motion.a>
+              ))}
+            </nav>
+
+            <motion.div
+              className="mobile-menu-footer"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
             >
-              Start a Project
-            </motion.a>
+              <a
+                href="#contact"
+                onClick={() => setMobileOpen(false)}
+                className="mobile-menu-cta"
+              >
+                Start a Project
+              </a>
+              <p className="mobile-menu-tagline">Brand Architecture Studio — Dubai</p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
