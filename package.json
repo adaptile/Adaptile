@@ -8,16 +8,18 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "serve dist -s -l 8080"
+    "start": "node server.js"
   },
   "dependencies": {
     "@playwright/test": "^1.58.2",
     "embla-carousel-react": "^8.6.0",
     "embla-carousel-wheel-gestures": "^8.1.0",
+    "express": "^5.2.1",
     "lucide-react": "^0.577.0",
     "motion": "^12.38.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "resend": "^6.9.4",
     "serve": "^14.2.6"
   },
   "devDependencies": {

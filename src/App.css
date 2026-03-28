@@ -1985,6 +1985,19 @@
 
 .contact-alt a:hover { opacity: 0.7; }
 
+.contact-error {
+  color: #e85d5d;
+  font-size: 14px;
+  font-family: var(--font-body);
+  text-align: center;
+  margin-top: -8px;
+}
+
+.contact-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .contact-confirmation {
   text-align: center;
   position: relative;

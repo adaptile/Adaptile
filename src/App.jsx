@@ -1159,6 +1159,38 @@ function Services() {
    ───────────────────────────────────── */
 function ContactSection() {
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSending(true)
+    setError('')
+
+    const form = e.target
+    const name = form.elements.name.value
+    const email = form.elements.email.value
+    const message = form.elements.message.value
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        form.reset()
+        setSubmitted(true)
+      } else {
+        setError(data.error || 'Something went wrong. Please try again.')
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <section id="contact" className="contact-section">
@@ -1209,28 +1241,21 @@ function ContactSection() {
                   If you're ready to dominate your space, let's talk.
                 </p>
 
-                <form className="contact-form" onSubmit={(e) => {
-                  e.preventDefault()
-                  const form = e.target
-                  const name = form.elements[0].value
-                  const email = form.elements[1].value
-                  const message = form.elements[2].value
-                  window.open(`mailto:zaidan.yezen@gmail.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
-                  form.reset()
-                  setSubmitted(true)
-                }}>
+                <form className="contact-form" onSubmit={handleSubmit}>
                   <div className="contact-form-row">
-                    <input type="text" className="contact-input" placeholder="Your Name" required />
-                    <input type="email" className="contact-input" placeholder="Your Email" required />
+                    <input type="text" name="name" className="contact-input" placeholder="Your Name" required />
+                    <input type="email" name="email" className="contact-input" placeholder="Your Email" required />
                   </div>
                   <textarea
+                    name="message"
                     className="contact-input contact-textarea"
                     placeholder="Tell us about your project..."
                     rows={5}
                     required
                   />
-                  <button type="submit" className="contact-submit">
-                    Send Message <Send size={18} />
+                  {error && <p className="contact-error">{error}</p>}
+                  <button type="submit" className="contact-submit" disabled={sending}>
+                    {sending ? 'Sending...' : <>Send Message <Send size={18} /></>}
                   </button>
                 </form>
 
