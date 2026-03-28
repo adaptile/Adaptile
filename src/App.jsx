@@ -1181,7 +1181,7 @@ function ContactSection() {
             const name = form.elements[0].value
             const email = form.elements[1].value
             const message = form.elements[2].value
-            window.open(`mailto:hello@adaptile.ae?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
+            window.open(`mailto:zaidan.yezen@gmail.com?subject=Project Inquiry from ${encodeURIComponent(name)}&body=${encodeURIComponent(`From: ${name}\nEmail: ${email}\n\n${message}`)}`)
           }}>
             <div className="contact-form-row">
               <input type="text" className="contact-input" placeholder="Your Name" required />
