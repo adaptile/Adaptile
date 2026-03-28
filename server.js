@@ -20,7 +20,7 @@ app.post('/api/contact', async (req, res) => {
 
   try {
     const { error } = await resend.emails.send({
-      from: 'Adaptile <onboarding@resend.dev>',
+      from: 'Adaptile <hello@adaptile.ae>',
       to: ['zaidan.yezen@gmail.com'],
       subject: `Project Inquiry from ${name}`,
       replyTo: email,
