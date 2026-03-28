@@ -42,7 +42,7 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
-app.get('*', (req, res) => {
+app.get('/{*path}', (req, res) => {
   res.sendFile(resolve(__dirname, 'dist', 'index.html'))
 })
 
