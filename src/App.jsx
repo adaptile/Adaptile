@@ -589,6 +589,21 @@ function AnimatedCounter({ value }) {
 /* ─────────────────────────────────────
    BATCH MODAL
    ───────────────────────────────────── */
+function preloadProjectAssets(project) {
+  if (project._preloaded) return
+  project._preloaded = true
+  project.images.forEach((src) => {
+    if (isVideo(src)) {
+      const v = document.createElement('video')
+      v.preload = 'auto'
+      v.src = src
+    } else {
+      const img = new Image()
+      img.src = src
+    }
+  })
+}
+
 function BatchModal({ batch, onClose }) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
   const [emblaRef] = useEmblaCarousel(
@@ -597,6 +612,7 @@ function BatchModal({ batch, onClose }) {
   )
 
   useEffect(() => {
+    preloadProjectAssets(batch)
     document.body.style.overflow = 'hidden'
     const onKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
@@ -604,7 +620,7 @@ function BatchModal({ batch, onClose }) {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [onClose])
+  }, [onClose, batch])
 
   return (
     <motion.div
@@ -645,9 +661,9 @@ function BatchModal({ batch, onClose }) {
               {batch.images.map((src, idx) => (
                 <div key={idx} className="modal-media-item">
                   {isVideo(src) ? (
-                    <video src={src} autoPlay loop muted playsInline preload="metadata" />
+                    <video src={src} autoPlay loop muted playsInline preload="auto" />
                   ) : (
-                    <img src={src} loading="lazy" alt={`${batch.title} ${idx + 1}`} />
+                    <img src={src} alt={`${batch.title} ${idx + 1}`} />
                   )}
                 </div>
               ))}
@@ -931,6 +947,8 @@ function WorkSection({ onSelectBatch }) {
           >
             <div
               className="work-card-inner"
+              onTouchStart={() => preloadProjectAssets(project)}
+              onMouseEnter={() => preloadProjectAssets(project)}
               onClick={() => onSelectBatch(project)}
             >
               {isVideo(project.thumbnail) ? (
