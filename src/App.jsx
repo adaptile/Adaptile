@@ -531,9 +531,10 @@ function Reveal({ children, delay = 0, className = '' }) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    const isMobile = window.innerWidth <= 768
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
-      { rootMargin: '-60px' }
+      { rootMargin: isMobile ? '-10px' : '-60px' }
     )
     obs.observe(el)
     return () => obs.disconnect()
@@ -936,7 +937,7 @@ function WorkSection({ onSelectBatch }) {
                   src={project.thumbnail}
                   className="work-card-media"
                   autoPlay loop muted playsInline
-                  preload="none"
+                  preload="metadata"
                 />
               ) : (
                 <img
