@@ -590,9 +590,10 @@ function AnimatedCounter({ value }) {
    BATCH MODAL
    ───────────────────────────────────── */
 function BatchModal({ batch, onClose }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
   const [emblaRef] = useEmblaCarousel(
-    { loop: true, dragFree: true },
-    [WheelGesturesPlugin()]
+    { loop: true, dragFree: !isMobile, containScroll: isMobile ? 'trimSnaps' : false },
+    isMobile ? [] : [WheelGesturesPlugin()]
   )
 
   useEffect(() => {
@@ -644,7 +645,7 @@ function BatchModal({ batch, onClose }) {
               {batch.images.map((src, idx) => (
                 <div key={idx} className="modal-media-item">
                   {isVideo(src) ? (
-                    <video src={src} autoPlay loop muted playsInline />
+                    <video src={src} autoPlay loop muted playsInline preload="metadata" />
                   ) : (
                     <img src={src} loading="lazy" alt={`${batch.title} ${idx + 1}`} />
                   )}

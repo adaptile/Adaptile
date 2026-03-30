@@ -1823,15 +1823,27 @@
     margin-left: 12px;
   }
   .modal-body {
-    padding: 16px;
+    padding: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   .modal-carousel-container {
-    gap: 12px;
-    padding: 0 4px;
+    gap: 10px;
+    padding: 0;
   }
   .modal-media-item {
-    height: 45vh;
+    height: auto;
+    max-height: 50vh;
     max-width: 85vw;
+    flex: 0 0 85vw;
+  }
+  .modal-media-item img,
+  .modal-media-item video {
+    height: auto;
+    width: 100%;
+    max-height: 50vh;
+    object-fit: contain;
   }
 }
 
