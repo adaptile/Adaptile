@@ -607,8 +607,8 @@ function preloadProjectAssets(project) {
 function BatchModal({ batch, onClose }) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
   const [emblaRef] = useEmblaCarousel(
-    { loop: true, dragFree: !isMobile, containScroll: isMobile ? 'trimSnaps' : false },
-    isMobile ? [] : [WheelGesturesPlugin()]
+    { loop: true, dragFree: true },
+    [WheelGesturesPlugin()]
   )
 
   useEffect(() => {
@@ -631,11 +631,11 @@ function BatchModal({ batch, onClose }) {
       onClick={onClose}
     >
       <motion.div
-        className="modal-container"
-        initial={{ scale: 0.94, y: 20, opacity: 0 }}
+        className={`modal-container ${isMobile ? 'modal-mobile' : ''}`}
+        initial={{ scale: isMobile ? 1 : 0.94, y: isMobile ? '100%' : 20, opacity: isMobile ? 1 : 0 }}
         animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.94, y: 20, opacity: 0 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        exit={{ scale: isMobile ? 1 : 0.94, y: isMobile ? '100%' : 20, opacity: isMobile ? 1 : 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
@@ -655,21 +655,36 @@ function BatchModal({ batch, onClose }) {
             <X size={20} />
           </button>
         </div>
-        <div className="modal-body">
-          <div className="modal-carousel-viewport" ref={emblaRef}>
-            <div className="modal-carousel-container">
-              {batch.images.map((src, idx) => (
-                <div key={idx} className="modal-media-item">
-                  {isVideo(src) ? (
-                    <video src={src} autoPlay loop muted playsInline preload="auto" />
-                  ) : (
-                    <img src={src} alt={`${batch.title} ${idx + 1}`} />
-                  )}
-                </div>
-              ))}
+
+        {isMobile ? (
+          <div className="modal-scroll">
+            {batch.images.map((src, idx) => (
+              <div key={idx} className="modal-scroll-item">
+                {isVideo(src) ? (
+                  <video src={src} autoPlay loop muted playsInline preload="auto" />
+                ) : (
+                  <img src={src} alt={`${batch.title} ${idx + 1}`} />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="modal-body">
+            <div className="modal-carousel-viewport" ref={emblaRef}>
+              <div className="modal-carousel-container">
+                {batch.images.map((src, idx) => (
+                  <div key={idx} className="modal-media-item">
+                    {isVideo(src) ? (
+                      <video src={src} autoPlay loop muted playsInline preload="auto" />
+                    ) : (
+                      <img src={src} alt={`${batch.title} ${idx + 1}`} />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </motion.div>
     </motion.div>
   )
