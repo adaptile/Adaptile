@@ -2,14 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'motion/react'
 import { ArrowUpRight, X, Send } from 'lucide-react'
-import useEmblaCarousel from 'embla-carousel-react'
-import { WheelGesturesPlugin } from 'embla-carousel-wheel-gestures'
+import { Link } from 'react-router'
 import './App.css'
 
 /* ─────────────────────────────────────
    DATA
    ───────────────────────────────────── */
-const PROJECTS = [
+export const PROJECTS = [
   {
     id: 'jason-derulo', title: 'Jason Derulo', tag: 'Creative Vision · Content Creation',
     featured: true,
@@ -453,7 +452,7 @@ const STATS = [
   { value: '3+', label: 'Years Operating' },
 ]
 
-function isVideo(src) {
+export function isVideo(src) {
   return /\.(mp4|webm|mov)$/i.test(src)
 }
 
@@ -589,107 +588,6 @@ function AnimatedCounter({ value }) {
 /* ─────────────────────────────────────
    BATCH MODAL
    ───────────────────────────────────── */
-function preloadProjectAssets(project) {
-  if (project._preloaded) return
-  project._preloaded = true
-  project.images.forEach((src) => {
-    if (isVideo(src)) {
-      const v = document.createElement('video')
-      v.preload = 'auto'
-      v.src = src
-    } else {
-      const img = new Image()
-      img.src = src
-    }
-  })
-}
-
-function BatchModal({ batch, onClose }) {
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768
-  const [emblaRef] = useEmblaCarousel(
-    { loop: true, dragFree: true },
-    [WheelGesturesPlugin()]
-  )
-
-  useEffect(() => {
-    preloadProjectAssets(batch)
-    document.body.style.overflow = 'hidden'
-    const onKey = (e) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', onKey)
-    return () => {
-      document.body.style.overflow = ''
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [onClose, batch])
-
-  return (
-    <motion.div
-      className="modal-backdrop"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className={`modal-container ${isMobile ? 'modal-mobile' : ''}`}
-        initial={{ scale: isMobile ? 1 : 0.94, y: isMobile ? '100%' : 20, opacity: isMobile ? 1 : 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: isMobile ? 1 : 0.94, y: isMobile ? '100%' : 20, opacity: isMobile ? 1 : 0 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="modal-header">
-          <div>
-            <div className="modal-tag">{batch.tag}</div>
-            <div className="modal-title">{batch.title}</div>
-            <div className="modal-desc">
-              Full creative presentation and brand architecture for {batch.title}.
-              {batch.link && (
-                <a href={batch.link} target="_blank" rel="noopener noreferrer" className="modal-link">
-                  View live post &rarr;
-                </a>
-              )}
-            </div>
-          </div>
-          <button className="modal-close" onClick={onClose} aria-label="Close">
-            <X size={20} />
-          </button>
-        </div>
-
-        {isMobile ? (
-          <div className="modal-scroll">
-            {batch.images.map((src, idx) => (
-              <div key={idx} className="modal-scroll-item">
-                {isVideo(src) ? (
-                  <video src={src} autoPlay loop muted playsInline preload="auto" />
-                ) : (
-                  <img src={src} alt={`${batch.title} ${idx + 1}`} />
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="modal-body">
-            <div className="modal-carousel-viewport" ref={emblaRef}>
-              <div className="modal-carousel-container">
-                {batch.images.map((src, idx) => (
-                  <div key={idx} className="modal-media-item">
-                    {isVideo(src) ? (
-                      <video src={src} autoPlay loop muted playsInline preload="auto" />
-                    ) : (
-                      <img src={src} alt={`${batch.title} ${idx + 1}`} />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
-  )
-}
-
 /* ─────────────────────────────────────
    NAVBAR
    ───────────────────────────────────── */
@@ -938,7 +836,7 @@ function About() {
 /* ─────────────────────────────────────
    WORK SECTION (Grid)
    ───────────────────────────────────── */
-function WorkSection({ onSelectBatch }) {
+function WorkSection() {
   return (
     <section id="work" className="work-section">
       <Reveal>
@@ -960,11 +858,9 @@ function WorkSection({ onSelectBatch }) {
             key={project.id}
             className={`work-card ${project.featured ? 'work-card-featured' : ''}`}
           >
-            <div
+            <Link
+              to={`/work/${project.id}`}
               className="work-card-inner"
-              onTouchStart={() => preloadProjectAssets(project)}
-              onMouseEnter={() => preloadProjectAssets(project)}
-              onClick={() => onSelectBatch(project)}
             >
               {isVideo(project.thumbnail) ? (
                 <video
@@ -990,7 +886,7 @@ function WorkSection({ onSelectBatch }) {
                 <span>View ({project.images.length})</span>
                 <ArrowUpRight size={14} />
               </div>
-            </div>
+            </Link>
           </Reveal>
         ))}
 
@@ -1341,7 +1237,7 @@ function Footer() {
    APP
    ───────────────────────────────────── */
 export default function App() {
-  const [selectedBatch, setSelectedBatch] = useState(null)
+
 
   return (
     <>
@@ -1360,18 +1256,12 @@ export default function App() {
       <ClientMarquee />
       <About />
       <div className="section-divider" />
-      <WorkSection onSelectBatch={setSelectedBatch} />
+      <WorkSection />
       <div className="section-divider" />
       <TeamSection />
       <Services />
       <ContactSection />
       <Footer />
-
-      <AnimatePresence>
-        {selectedBatch && (
-          <BatchModal batch={selectedBatch} onClose={() => setSelectedBatch(null)} />
-        )}
-      </AnimatePresence>
       <BackToTop />
     </>
   )

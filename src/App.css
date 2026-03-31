@@ -1037,6 +1037,9 @@
 }
 
 .work-card-inner {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   position: relative;
   overflow: hidden;
   height: 420px;
