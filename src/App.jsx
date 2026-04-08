@@ -749,7 +749,7 @@ function Hero() {
         {HERO_FEATURES.map((feat, idx) => (
           <div key={idx} className="accordion-panel">
             {isVideo(feat.thumbnail) ? (
-              <video src={feat.thumbnail} autoPlay loop muted playsInline />
+              <video src={feat.thumbnail} autoPlay loop muted playsInline preload="auto" />
             ) : (
               <img src={feat.thumbnail} alt={feat.title} />
             )}
@@ -1222,8 +1222,6 @@ function Footer() {
           <a href="#about">About</a>
           <a href="#contact">Contact</a>
           <a href="https://t.me/adaptile" target="_blank" rel="noopener noreferrer">Telegram</a>
-          <a href="https://x.com/adaptile" target="_blank" rel="noopener noreferrer">X</a>
-          <a href="https://instagram.com/adaptile" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </div>
       <div className="footer-bottom">
