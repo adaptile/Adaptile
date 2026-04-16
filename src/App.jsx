@@ -727,9 +727,9 @@ function Hero() {
 
         <div className="hero-anim" style={{ animationDelay: '0.4s' }}>
         <p className="hero-sub">
-          We architect high-converting visual systems for the digital frontier.
-          From celebrity partnerships to the most explosive Web3 launches — we
-          don't build brands. We build empires.
+          We design brands that people remember and systems that actually convert.
+          Celebrity partnerships, Web3 launches, full-scale campaigns. If it
+          needs to look sharp and move fast, that's where we come in.
         </p>
         </div>
 
