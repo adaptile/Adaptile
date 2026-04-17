@@ -431,18 +431,54 @@ const SERVICES = [
   {
     num: '01', title: 'Brand Identity & Strategy',
     desc: 'Complete visual identity systems — from logo architecture to full brand guidelines. We build visual languages that command recognition and force attention.',
+    deliverables: [
+      'Logo & mark systems',
+      'Typography & color',
+      'Brand guidelines',
+      'Verbal identity & naming',
+      'Social & pitch templates',
+      'Strategic positioning',
+    ],
+    outcome: 'Typical engagement: 4–6 weeks · From discovery to full guideline handoff.',
   },
   {
     num: '02', title: 'Content & Creative Production',
     desc: 'High-impact visual content for social, web, and beyond. Video, motion graphics, 3D renders, and photography that stops the scroll and drives engagement.',
+    deliverables: [
+      'Short-form video & edits',
+      'Motion graphics & animation',
+      '3D renders & CGI',
+      'Photography direction',
+      'Ad creative & social sets',
+      'Launch content systems',
+    ],
+    outcome: 'Typical engagement: 2–8 weeks · Single launches or always-on content retainers.',
   },
   {
     num: '03', title: 'Web3 & Crypto Branding',
     desc: 'Meme coin launches, NFT collections, DeFi protocols, and token ecosystems. We understand the culture and build brands that dominate the timeline.',
+    deliverables: [
+      'Token & meme coin launches',
+      'NFT collection identity',
+      'Protocol & DeFi branding',
+      'Community & lore design',
+      'Character & mascot work',
+      'Launch-day campaigns',
+    ],
+    outcome: 'Typical engagement: 3–6 weeks · From zero to launch-ready brand + assets.',
   },
   {
     num: '04', title: 'Creative Direction & Consulting',
     desc: 'Strategic creative leadership for campaigns, launches, and brand evolution. We don\'t follow trends — we architect them.',
+    deliverables: [
+      'Campaign direction',
+      'Brand audit & repositioning',
+      'Launch planning',
+      'Creative workshops',
+      'Fractional creative leadership',
+      'Brand architecture',
+    ],
+    outcome: 'Engagement model: project-based or monthly retainer · In-house creative embedded with your team.',
   },
 ]
 
@@ -1075,7 +1111,25 @@ function Services() {
                 <span className={`service-toggle ${openIdx === i ? 'open' : ''}`}>+</span>
               </div>
               <div className={`service-body ${openIdx === i ? 'service-body-open' : ''}`}>
-                <p>{service.desc}</p>
+                <div className="service-body-inner">
+                  <p className="service-desc">{service.desc}</p>
+                  {service.deliverables && (
+                    <div className="service-deliverables">
+                      <span className="service-deliverables-label">What's included</span>
+                      <ul className="service-deliverables-list">
+                        {service.deliverables.map((item, di) => (
+                          <li key={di}>
+                            <span className="service-deliverables-bullet" aria-hidden="true" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {service.outcome && (
+                    <p className="service-outcome">{service.outcome}</p>
+                  )}
+                </div>
               </div>
             </div>
           </Reveal>
