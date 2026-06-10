@@ -424,7 +424,7 @@ export const PROJECTS = [
 const HERO_FEATURES = [
   { thumbnail: '/nfts/jason%20derulo/vid_1.mp4', title: 'Jason Derulo', tag: 'Creative Vision · Content Creation' },
   { thumbnail: '/nfts/neiro/cover%20for%20neiro.mp4', title: 'Neiro', tag: 'Brand Identity · Character Creation · Animations · Content Creation' },
-  { thumbnail: '/nfts/mikadontlouz/covermika.mp4', title: 'Mikadontlouz', tag: 'Content Creation' },
+  { thumbnail: '/nfts/mikadontlouz/covermika.mp4', title: 'Mikadontlouz', tag: 'Content Creation', objectY: '-30%' },
 ]
 
 const SERVICES = [
@@ -783,7 +783,7 @@ function Hero() {
 
       <div className="hero-showcase hero-anim" style={{ animationDelay: '0.3s' }}>
         {HERO_FEATURES.map((feat, idx) => (
-          <div key={idx} className="accordion-panel">
+          <div key={idx} className="accordion-panel" style={feat.objectY ? { '--accordion-y': feat.objectY } : undefined}>
             {isVideo(feat.thumbnail) ? (
               <video src={feat.thumbnail} autoPlay loop muted playsInline preload="auto" />
             ) : (

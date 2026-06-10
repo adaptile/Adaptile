@@ -633,7 +633,7 @@
 .accordion-panel video {
   position: absolute;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, var(--accordion-y, -50%));
   min-width: 100%; min-height: 100%;
   width: auto; height: auto;
   object-fit: cover;
@@ -644,7 +644,7 @@
 .accordion-panel:hover img,
 .accordion-panel:hover video {
   filter: saturate(1) brightness(0.85);
-  transform: translate(-50%, -50%) scale(1.05);
+  transform: translate(-50%, var(--accordion-y, -50%)) scale(1.05);
 }
 
 .accordion-gradient {
