@@ -6,6 +6,7 @@ import { motion } from 'motion/react'
 import { PROJECTS, isVideo, posterFor, webmFor } from './App.jsx'
 import Picture from './Picture.jsx'
 import LazyVideo from './LazyVideo.jsx'
+import { aspectRatio } from './mediaAspect.js'
 import './ProjectDetail.css'
 
 export default function ProjectDetail() {
@@ -130,6 +131,7 @@ export default function ProjectDetail() {
             <motion.div
               key={idx}
               className="pd-gallery-item"
+              style={{ aspectRatio: aspectRatio(src) }}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -148,7 +150,7 @@ export default function ProjectDetail() {
                   <Picture
                     src={src}
                     alt={`${project.title} ${idx + 1}`}
-                    sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
+                    sizes="(max-width: 900px) 50vw, 33vw"
                     className={`pd-gallery-media ${loadedImages.has(idx) ? 'loaded' : ''}`}
                     onLoad={() => handleImageLoad(idx)}
                   />
