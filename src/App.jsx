@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 // eslint-disable-next-line no-unused-vars
-import { motion, AnimatePresence } from 'motion/react'
-import { ArrowUpRight, X, Send } from 'lucide-react'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
+import { ArrowUpRight, X, Send, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import Picture from './Picture.jsx'
 import LazyVideo from './LazyVideo.jsx'
@@ -1013,9 +1013,131 @@ function TeamMemberModal({ member, onClose }) {
   )
 }
 
+// Renders a team member's photo using the same rules as the desktop cards.
+function MemberPhoto({ member, sizes }) {
+  if (member.photo)
+    return <Picture src={member.photo} alt={member.name} className="team-card-photo-img" sizes={sizes} />
+  if (member.name === 'Yezen')
+    return <Picture src="/founder-pfp.png" alt={member.name} className="team-card-photo-img" sizes={sizes} />
+  return (
+    <div className="team-card-photo-placeholder">
+      <span>{member.name.split(' ').map((w) => w[0]).join('')}</span>
+    </div>
+  )
+}
+
+// Mobile-only swipeable carousel: one member at a time, swipe / arrows / keys.
+// Only the active slide is mounted, so offscreen photos aren't fetched.
+function TeamCarousel({ members, onCardTap }) {
+  const reduce = useReducedMotion()
+  // [index, direction] — direction drives the slide-in/out side.
+  const [[index, direction], setPage] = useState([0, 0])
+  const dragged = useRef(false)
+  const total = members.length
+  const member = members[index]
+
+  const paginate = (dir) =>
+    setPage(([i]) => [(i + dir + total) % total, dir])
+  const goTo = (i) => setPage(([cur]) => [i, i > cur ? 1 : -1])
+
+  const variants = {
+    enter: (dir) => (reduce ? { opacity: 0 } : { x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir) => (reduce ? { opacity: 0 } : { x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
+  }
+  const transition = reduce
+    ? { duration: 0 }
+    : { x: { type: 'spring', stiffness: 300, damping: 32 }, opacity: { duration: 0.2 } }
+
+  return (
+    <div
+      className="team-carousel"
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Team members"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); paginate(1) }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); paginate(-1) }
+      }}
+    >
+      <div className="team-carousel-viewport">
+        <AnimatePresence initial={false} mode="popLayout" custom={direction}>
+          <motion.div
+            key={index}
+            className="team-carousel-slide"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={transition}
+            drag="x"
+            dragSnapToOrigin
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.18}
+            onDragStart={() => { dragged.current = false }}
+            onDragEnd={(e, info) => {
+              if (Math.abs(info.offset.x) > 8) dragged.current = true
+              const power = info.offset.x + info.velocity.x * 0.2
+              if (power <= -60) paginate(1)
+              else if (power >= 60) paginate(-1)
+            }}
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${total}: ${member.name}`}
+          >
+            <div
+              className="team-card"
+              onClick={() => {
+                // Swipe just happened — don't treat it as a tap.
+                if (dragged.current) { dragged.current = false; return }
+                onCardTap(member)
+              }}
+            >
+              <div className="team-card-photo">
+                <MemberPhoto member={member} sizes="90vw" />
+              </div>
+              <div className="team-card-info">
+                <h3 className="team-card-name">{member.name}</h3>
+                <span className="team-card-role">{member.role}</span>
+                <p className="team-card-bio">{member.bio}</p>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="team-carousel-controls">
+        <button className="team-carousel-arrow" onClick={() => paginate(-1)} aria-label="Previous team member">
+          <ChevronLeft size={20} />
+        </button>
+        <div className="team-carousel-dots" role="tablist" aria-label="Choose team member">
+          {members.map((m, i) => (
+            <button
+              key={i}
+              className={`team-carousel-dot ${i === index ? 'active' : ''}`}
+              aria-label={`View ${m.name}`}
+              aria-current={i === index ? 'true' : undefined}
+              onClick={() => goTo(i)}
+            />
+          ))}
+        </div>
+        <button className="team-carousel-arrow" onClick={() => paginate(1)} aria-label="Next team member">
+          <ChevronRight size={20} />
+        </button>
+      </div>
+      <div className="team-carousel-count" aria-live="polite">{index + 1} / {total}</div>
+    </div>
+  )
+}
+
 function TeamSection() {
   const [selectedMember, setSelectedMember] = useState(null)
-  const [isMobile, setIsMobile] = useState(false)
+  // Lazy-init from the real width so mobile renders the carousel on the first
+  // paint (no desktop-grid flash); keeps the existing 768px breakpoint.
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= 768,
+  )
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768)
@@ -1042,41 +1164,47 @@ function TeamSection() {
         </div>
       </Reveal>
 
-      <Reveal className="team-founder">
-        <div className="team-card" onClick={() => handleCardClick(TEAM[0])}>
-          <div className="team-card-photo">
-            <Picture src="/founder-pfp.png" alt={TEAM[0].name} className="team-card-photo-img" sizes="(max-width: 768px) 90vw, 420px" />
-          </div>
-          <div className="team-card-info">
-            <h3 className="team-card-name">{TEAM[0].name}</h3>
-            <span className="team-card-role">{TEAM[0].role}</span>
-            <p className="team-card-bio">{TEAM[0].bio}</p>
-          </div>
-        </div>
-      </Reveal>
-
-      <div className="team-grid">
-        {TEAM.slice(1).map((member, i) => (
-          <Reveal key={i} delay={i * 0.05}>
-            <div className="team-card" onClick={() => handleCardClick(member)}>
+      {isMobile ? (
+        <TeamCarousel members={TEAM} onCardTap={handleCardClick} />
+      ) : (
+        <>
+          <Reveal className="team-founder">
+            <div className="team-card" onClick={() => handleCardClick(TEAM[0])}>
               <div className="team-card-photo">
-                {member.photo ? (
-                  <Picture src={member.photo} alt={member.name} className="team-card-photo-img" sizes="(max-width: 768px) 50vw, 240px" />
-                ) : (
-                  <div className="team-card-photo-placeholder">
-                    <span>{member.name.split(' ').map(w => w[0]).join('')}</span>
-                  </div>
-                )}
+                <Picture src="/founder-pfp.png" alt={TEAM[0].name} className="team-card-photo-img" sizes="(max-width: 768px) 90vw, 420px" />
               </div>
               <div className="team-card-info">
-                <h3 className="team-card-name">{member.name}</h3>
-                <span className="team-card-role">{member.role}</span>
-                <p className="team-card-bio">{member.bio}</p>
+                <h3 className="team-card-name">{TEAM[0].name}</h3>
+                <span className="team-card-role">{TEAM[0].role}</span>
+                <p className="team-card-bio">{TEAM[0].bio}</p>
               </div>
             </div>
           </Reveal>
-        ))}
-      </div>
+
+          <div className="team-grid">
+            {TEAM.slice(1).map((member, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <div className="team-card" onClick={() => handleCardClick(member)}>
+                  <div className="team-card-photo">
+                    {member.photo ? (
+                      <Picture src={member.photo} alt={member.name} className="team-card-photo-img" sizes="(max-width: 768px) 50vw, 240px" />
+                    ) : (
+                      <div className="team-card-photo-placeholder">
+                        <span>{member.name.split(' ').map(w => w[0]).join('')}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="team-card-info">
+                    <h3 className="team-card-name">{member.name}</h3>
+                    <span className="team-card-role">{member.role}</span>
+                    <p className="team-card-bio">{member.bio}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </>
+      )}
 
       <AnimatePresence>
         {selectedMember && (
