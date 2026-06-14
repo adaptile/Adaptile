@@ -1,8 +1,11 @@
 import { useParams, Link, useNavigate } from 'react-router'
 import { useEffect, useState, useRef } from 'react'
 import { ArrowLeft, ArrowUpRight, ExternalLink } from 'lucide-react'
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'motion/react'
-import { PROJECTS, isVideo } from './App.jsx'
+import { PROJECTS, isVideo, posterFor, webmFor } from './App.jsx'
+import Picture from './Picture.jsx'
+import LazyVideo from './LazyVideo.jsx'
 import './ProjectDetail.css'
 
 export default function ProjectDetail() {
@@ -51,7 +54,7 @@ export default function ProjectDetail() {
           <span>Back</span>
         </Link>
         <Link to="/" className="pd-nav-logo">
-          <img src="/adaptile-logo.jpg" alt="Adaptile" />
+          <Picture src="/adaptile-logo.jpg" alt="Adaptile" sizes="160px" />
           <span>Adaptile</span>
         </Link>
         <a href="#contact-cta" className="pd-nav-cta">Start a Project</a>
@@ -61,9 +64,14 @@ export default function ProjectDetail() {
       <section className="pd-hero">
         <div className="pd-hero-bg">
           {isVideo(project.thumbnail) ? (
-            <video src={project.thumbnail} autoPlay loop muted playsInline preload="auto" />
+            <LazyVideo
+              src={project.thumbnail}
+              webm={webmFor(project.thumbnail)}
+              poster={posterFor(project.thumbnail)}
+              rootMargin="600px"
+            />
           ) : (
-            <img src={project.thumbnail} alt={project.title} />
+            <Picture src={project.thumbnail} alt={project.title} priority sizes="100vw" />
           )}
           <div className="pd-hero-overlay" />
         </div>
@@ -128,21 +136,19 @@ export default function ProjectDetail() {
               transition={{ duration: 0.5, delay: Math.min(idx * 0.05, 0.3) }}
             >
               {isVideo(src) ? (
-                <video
+                <LazyVideo
                   src={src}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
+                  webm={webmFor(src)}
+                  poster={posterFor(src)}
                   className="pd-gallery-media"
                 />
               ) : (
                 <>
                   {!loadedImages.has(idx) && <div className="pd-gallery-placeholder" />}
-                  <img
+                  <Picture
                     src={src}
                     alt={`${project.title} ${idx + 1}`}
+                    sizes="(max-width: 600px) 50vw, (max-width: 1000px) 33vw, 25vw"
                     className={`pd-gallery-media ${loadedImages.has(idx) ? 'loaded' : ''}`}
                     onLoad={() => handleImageLoad(idx)}
                   />
@@ -173,7 +179,7 @@ export default function ProjectDetail() {
       {/* Footer */}
       <footer className="pd-footer">
         <Link to="/" className="pd-footer-logo">
-          <img src="/adaptile-logo.jpg" alt="Adaptile" />
+          <Picture src="/adaptile-logo.jpg" alt="Adaptile" sizes="160px" />
           <span>Adaptile</span>
         </Link>
         <span className="pd-footer-copy">&copy; {new Date().getFullYear()} Adaptile. All rights reserved.</span>

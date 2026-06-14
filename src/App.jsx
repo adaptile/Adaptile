@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
 import { ArrowUpRight, X, Send } from 'lucide-react'
 import { Link } from 'react-router'
+import Picture from './Picture.jsx'
+import LazyVideo from './LazyVideo.jsx'
 import './App.css'
 
 /* ─────────────────────────────────────
@@ -492,6 +494,10 @@ export function isVideo(src) {
   return /\.(mp4|webm|mov)$/i.test(src)
 }
 
+// Derive optimized siblings produced by scripts/optimize-videos.sh.
+export const posterFor = (src) => src.replace(/\.(mp4|webm|mov)$/i, '-poster.jpg')
+export const webmFor = (src) => src.replace(/\.(mp4|webm|mov)$/i, '.webm')
+
 /* ─────────────────────────────────────
    SCROLL PROGRESS
    ───────────────────────────────────── */
@@ -654,7 +660,7 @@ function Navbar() {
     <>
       <nav className={`navbar navbar-enter ${scrolled ? 'scrolled' : ''}`}>
         <a href="#" className="navbar-logo">
-          <img src="/adaptile-logo.jpg" alt="Adaptile" />
+          <Picture src="/adaptile-logo.jpg" alt="Adaptile" sizes="160px" />
           <span className="navbar-logo-text">Adaptile</span>
         </a>
 
@@ -684,7 +690,7 @@ function Navbar() {
           >
             <div className="mobile-menu-header">
               <a href="#" className="navbar-logo" onClick={() => setMobileOpen(false)}>
-                <img src="/adaptile-logo.jpg" alt="Adaptile" />
+                <Picture src="/adaptile-logo.jpg" alt="Adaptile" sizes="160px" />
                 <span className="navbar-logo-text">Adaptile</span>
               </a>
               <button
@@ -785,9 +791,14 @@ function Hero() {
         {HERO_FEATURES.map((feat, idx) => (
           <div key={idx} className="accordion-panel" style={feat.objectY ? { '--accordion-y': feat.objectY } : undefined}>
             {isVideo(feat.thumbnail) ? (
-              <video src={feat.thumbnail} autoPlay loop muted playsInline preload="auto" />
+              <LazyVideo
+                src={feat.thumbnail}
+                webm={webmFor(feat.thumbnail)}
+                poster={posterFor(feat.thumbnail)}
+                rootMargin="400px"
+              />
             ) : (
-              <img src={feat.thumbnail} alt={feat.title} />
+              <Picture src={feat.thumbnail} alt={feat.title} priority sizes="(max-width: 900px) 100vw, 33vw" />
             )}
             <div className="accordion-gradient" />
             <span className="accordion-collapsed-label">{feat.title}</span>
@@ -899,18 +910,18 @@ function WorkSection() {
               className="work-card-inner"
             >
               {isVideo(project.thumbnail) ? (
-                <video
+                <LazyVideo
                   src={project.thumbnail}
+                  webm={webmFor(project.thumbnail)}
+                  poster={posterFor(project.thumbnail)}
                   className="work-card-media"
-                  autoPlay loop muted playsInline
-                  preload="metadata"
                 />
               ) : (
-                <img
+                <Picture
                   src={project.thumbnail}
                   className="work-card-media"
-                  loading="lazy"
                   alt={project.title}
+                  sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
                 />
               )}
               <div className="work-card-overlay" />
@@ -983,9 +994,9 @@ function TeamMemberModal({ member, onClose }) {
         </button>
         <div className="team-modal-photo">
           {member.photo ? (
-            <img src={member.photo} alt={member.name} />
+            <Picture src={member.photo} alt={member.name} sizes="(max-width: 768px) 80vw, 360px" />
           ) : member.name === 'Yezen' ? (
-            <img src="/founder-pfp.png" alt={member.name} />
+            <Picture src="/founder-pfp.png" alt={member.name} sizes="(max-width: 768px) 80vw, 360px" />
           ) : (
             <div className="team-card-photo-placeholder">
               <span>{member.name.split(' ').map(w => w[0]).join('')}</span>
@@ -1034,7 +1045,7 @@ function TeamSection() {
       <Reveal className="team-founder">
         <div className="team-card" onClick={() => handleCardClick(TEAM[0])}>
           <div className="team-card-photo">
-            <img src="/founder-pfp.png" alt={TEAM[0].name} className="team-card-photo-img" />
+            <Picture src="/founder-pfp.png" alt={TEAM[0].name} className="team-card-photo-img" sizes="(max-width: 768px) 90vw, 420px" />
           </div>
           <div className="team-card-info">
             <h3 className="team-card-name">{TEAM[0].name}</h3>
@@ -1050,7 +1061,7 @@ function TeamSection() {
             <div className="team-card" onClick={() => handleCardClick(member)}>
               <div className="team-card-photo">
                 {member.photo ? (
-                  <img src={member.photo} alt={member.name} className="team-card-photo-img" />
+                  <Picture src={member.photo} alt={member.name} className="team-card-photo-img" sizes="(max-width: 768px) 50vw, 240px" />
                 ) : (
                   <div className="team-card-photo-placeholder">
                     <span>{member.name.split(' ').map(w => w[0]).join('')}</span>
