@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, X, Send, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowUpRight, X, Send, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router'
 import Picture from './Picture.jsx'
 import LazyVideo from './LazyVideo.jsx'
@@ -881,9 +881,135 @@ function About() {
 }
 
 /* ─────────────────────────────────────
-   WORK SECTION (Grid)
+   WORK SECTION (center-focus "peek" carousel)
    ───────────────────────────────────── */
+const wrapIndex = (n, m) => ((n % m) + m) % m
+
+// One large centered card with the previous/next cards peeking in from the
+// edges (clipped by the viewport). Advances one card at a time, loops, and
+// mounts only a small window around the active card so offscreen project media
+// isn't fetched up front. Cards are absolutely positioned and each animates to
+// its own offset, so the loop window can add/remove edge cards without reflow.
+function WorkPeekCarousel({ items, renderItem }) {
+  const reduce = useReducedMotion()
+  const viewportRef = useRef(null)
+  const [vw, setVw] = useState(0)
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth <= 768,
+  )
+  // pos is an unbounded counter; the active project is pos mod N.
+  const [pos, setPos] = useState(0)
+  const dragged = useRef(false)
+  const N = items.length
+
+  useEffect(() => {
+    const el = viewportRef.current
+    if (!el) return
+    const ro = new ResizeObserver((entries) => setVw(entries[0].contentRect.width))
+    ro.observe(el)
+    setVw(el.clientWidth)
+    const onResize = () => setIsMobile(window.innerWidth <= 768)
+    onResize()
+    window.addEventListener('resize', onResize)
+    return () => { ro.disconnect(); window.removeEventListener('resize', onResize) }
+  }, [])
+
+  const frac = isMobile ? 0.78 : 0.62 // active card width as a fraction of viewport
+  const gap = isMobile ? 10 : 28
+  const cardW = Math.round(vw * frac)
+  const step = cardW + gap
+  const active = wrapIndex(pos, N)
+
+  const paginate = (dir) => setPos((p) => p + dir)
+
+  const transition = reduce
+    ? { duration: 0 }
+    : { type: 'spring', stiffness: 300, damping: 34, opacity: { duration: 0.25 } }
+
+  // Window of cards around the active one: 0 = center, ±1 = visible peeks,
+  // ±2 = on-deck (kept mounted so they slide/fade in smoothly).
+  const WINDOW = [-2, -1, 0, 1, 2]
+
+  return (
+    <div
+      className="work-peek"
+      tabIndex={0}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Selected work"
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); paginate(1) }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); paginate(-1) }
+      }}
+    >
+      <div className="work-peek-controls">
+        <span className="work-peek-count" aria-live="polite">
+          <b>{String(active + 1).padStart(2, '0')}</b><i>/</i>{String(N).padStart(2, '0')}
+        </span>
+        <div className="work-peek-arrows">
+          <button className="work-peek-arrow" aria-label="Previous project" onClick={() => paginate(-1)}>
+            <ArrowLeft size={22} />
+          </button>
+          <button className="work-peek-arrow" aria-label="Next project" onClick={() => paginate(1)}>
+            <ArrowRight size={22} />
+          </button>
+        </div>
+      </div>
+
+      <div className="work-peek-viewport" ref={viewportRef}>
+        <motion.div
+          className="work-peek-track"
+          drag="x"
+          dragSnapToOrigin
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.16}
+          onDragStart={() => { dragged.current = false }}
+          onDragEnd={(e, info) => {
+            if (Math.abs(info.offset.x) > 8) dragged.current = true
+            const power = info.offset.x + info.velocity.x * 0.2
+            if (power <= -60) paginate(1)
+            else if (power >= 60) paginate(-1)
+          }}
+        >
+          <AnimatePresence initial={false}>
+            {vw > 0 && WINDOW.map((o) => {
+              const p = pos + o
+              const item = items[wrapIndex(p, N)]
+              const isActive = o === 0
+              return (
+                <motion.div
+                  key={p}
+                  className={`work-peek-card ${isActive ? 'is-active' : ''}`}
+                  style={{ width: cardW }}
+                  initial={false}
+                  animate={{
+                    x: o * step - cardW / 2,
+                    opacity: isActive ? 1 : Math.abs(o) === 1 ? 0.5 : 0,
+                    scale: isActive ? 1 : 0.94,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={transition}
+                  aria-hidden={isActive ? undefined : true}
+                >
+                  {renderItem(item, {
+                    dragged,
+                    isActive,
+                    focus: () => paginate(o), // clicking a peek centers it
+                  })}
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
 function WorkSection() {
+  // CTA card rides along as the final item in the rotation.
+  const items = [...PROJECTS, { cta: true, id: '__cta' }]
+
   return (
     <section id="work" className="work-section">
       <Reveal>
@@ -899,54 +1025,66 @@ function WorkSection() {
         </div>
       </Reveal>
 
-      <div className="work-grid">
-        {PROJECTS.map((project) => (
-          <Reveal
-            key={project.id}
-            className={`work-card ${project.featured ? 'work-card-featured' : ''}`}
-          >
-            <Link
-              to={`/work/${project.id}`}
-              className="work-card-inner"
+      <WorkPeekCarousel
+        items={items}
+        renderItem={(project, { dragged, isActive, focus }) =>
+          project.cta ? (
+            <a
+              href="#contact"
+              className="work-card-cta"
+              tabIndex={isActive ? undefined : -1}
+              onClick={(e) => {
+                if (dragged.current) { e.preventDefault(); dragged.current = false; return }
+                if (!isActive) { e.preventDefault(); focus() }
+              }}
             >
-              {isVideo(project.thumbnail) ? (
-                <LazyVideo
-                  src={project.thumbnail}
-                  webm={webmFor(project.thumbnail)}
-                  poster={posterFor(project.thumbnail)}
-                  className="work-card-media"
-                />
-              ) : (
-                <Picture
-                  src={project.thumbnail}
-                  className="work-card-media"
-                  alt={project.title}
-                  sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
-                />
-              )}
-              <div className="work-card-overlay" />
-              <div className="work-card-content">
-                <span className="work-card-tag">{project.tag}</span>
-                <h3 className="work-card-title">{project.title}</h3>
-              </div>
-              <div className="work-card-view">
-                <span>View ({project.images.length})</span>
-                <ArrowUpRight size={14} />
-              </div>
-            </Link>
-          </Reveal>
-        ))}
-
-        {/* CTA card */}
-        <Reveal className="work-card">
-          <a href="#contact" className="work-card-cta">
-            <span className="work-cta-label">Your Brand Here?</span>
-            <span className="work-cta-link">
-              Let's Talk <ArrowUpRight size={16} />
-            </span>
-          </a>
-        </Reveal>
-      </div>
+              <span className="work-cta-label">Your Brand Here?</span>
+              <span className="work-cta-link">
+                Let's Talk <ArrowUpRight size={16} />
+              </span>
+            </a>
+          ) : (
+            <div className="work-card">
+              <Link
+                to={`/work/${project.id}`}
+                className="work-card-inner"
+                draggable={false}
+                tabIndex={isActive ? undefined : -1}
+                // Swipe must not navigate; clicking a peeking card just centers it.
+                onClick={(e) => {
+                  if (dragged.current) { e.preventDefault(); dragged.current = false; return }
+                  if (!isActive) { e.preventDefault(); focus() }
+                }}
+              >
+                {isVideo(project.thumbnail) ? (
+                  <LazyVideo
+                    src={project.thumbnail}
+                    webm={webmFor(project.thumbnail)}
+                    poster={posterFor(project.thumbnail)}
+                    className="work-card-media"
+                  />
+                ) : (
+                  <Picture
+                    src={project.thumbnail}
+                    className="work-card-media"
+                    alt={project.title}
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                  />
+                )}
+                <div className="work-card-overlay" />
+                <div className="work-card-content">
+                  <span className="work-card-tag">{project.tag}</span>
+                  <h3 className="work-card-title">{project.title}</h3>
+                </div>
+                <div className="work-card-view">
+                  <span>View ({project.images.length})</span>
+                  <ArrowUpRight size={14} />
+                </div>
+              </Link>
+            </div>
+          )
+        }
+      />
     </section>
   )
 }
@@ -1026,19 +1164,37 @@ function MemberPhoto({ member, sizes }) {
   )
 }
 
-// Mobile-only swipeable carousel: one member at a time, swipe / arrows / keys.
-// Only the active slide is mounted, so offscreen photos aren't fetched.
-function TeamCarousel({ members, onCardTap }) {
+// Reusable swipeable carousel. Paginates by PAGE (groups of `perPage`), so the
+// dots and count reflect pages, not individual cards. Only the current page is
+// mounted, so offscreen media isn't fetched. Same swipe physics / keyboard /
+// reduced-motion for every consumer. `renderItem(item, { dragged })` receives a
+// shared `dragged` ref so a card can suppress its click when a swipe occurred.
+function Carousel({
+  items,
+  renderItem,
+  perPage = 1,
+  ariaLabel,
+  unitLabel = 'item',
+  getDotLabel = (i) => `Go to page ${i + 1}`,
+  getSlideLabel = (i, count) => `Page ${i + 1} of ${count}`,
+  pageClassName = '',
+}) {
   const reduce = useReducedMotion()
-  // [index, direction] — direction drives the slide-in/out side.
-  const [[index, direction], setPage] = useState([0, 0])
+  // [page, direction] — direction drives the slide-in/out side.
+  const [[rawPage, direction], setPage] = useState([0, 0])
   const dragged = useRef(false)
-  const total = members.length
-  const member = members[index]
+
+  const pageCount = Math.max(1, Math.ceil(items.length / perPage))
+  const page = Math.min(rawPage, pageCount - 1) // stay valid mid-render
+
+  // Re-clamp stored page when perPage changes (desktop <-> mobile resize).
+  useEffect(() => {
+    if (rawPage > pageCount - 1) setPage([pageCount - 1, 0])
+  }, [pageCount, rawPage])
 
   const paginate = (dir) =>
-    setPage(([i]) => [(i + dir + total) % total, dir])
-  const goTo = (i) => setPage(([cur]) => [i, i > cur ? 1 : -1])
+    setPage(([p]) => [(Math.min(p, pageCount - 1) + dir + pageCount) % pageCount, dir])
+  const goTo = (i) => setPage(([cur]) => [i, i > Math.min(cur, pageCount - 1) ? 1 : -1])
 
   const variants = {
     enter: (dir) => (reduce ? { opacity: 0 } : { x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
@@ -1049,23 +1205,25 @@ function TeamCarousel({ members, onCardTap }) {
     ? { duration: 0 }
     : { x: { type: 'spring', stiffness: 300, damping: 32 }, opacity: { duration: 0.2 } }
 
+  const pageItems = items.slice(page * perPage, page * perPage + perPage)
+
   return (
     <div
-      className="team-carousel"
+      className="carousel"
       role="group"
       aria-roledescription="carousel"
-      aria-label="Team members"
+      aria-label={ariaLabel}
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === 'ArrowRight') { e.preventDefault(); paginate(1) }
         else if (e.key === 'ArrowLeft') { e.preventDefault(); paginate(-1) }
       }}
     >
-      <div className="team-carousel-viewport">
+      <div className="carousel-viewport">
         <AnimatePresence initial={false} mode="popLayout" custom={direction}>
           <motion.div
-            key={index}
-            className="team-carousel-slide"
+            key={page}
+            className="carousel-slide"
             custom={direction}
             variants={variants}
             initial="enter"
@@ -1084,49 +1242,39 @@ function TeamCarousel({ members, onCardTap }) {
               else if (power >= 60) paginate(-1)
             }}
             aria-roledescription="slide"
-            aria-label={`${index + 1} of ${total}: ${member.name}`}
+            aria-label={getSlideLabel(page, pageCount)}
           >
-            <div
-              className="team-card"
-              onClick={() => {
-                // Swipe just happened — don't treat it as a tap.
-                if (dragged.current) { dragged.current = false; return }
-                onCardTap(member)
-              }}
-            >
-              <div className="team-card-photo">
-                <MemberPhoto member={member} sizes="90vw" />
-              </div>
-              <div className="team-card-info">
-                <h3 className="team-card-name">{member.name}</h3>
-                <span className="team-card-role">{member.role}</span>
-                <p className="team-card-bio">{member.bio}</p>
-              </div>
+            <div className={`carousel-page ${pageClassName}`} style={{ '--per-page': perPage }}>
+              {pageItems.map((item, i) => (
+                <div className="carousel-cell" key={page * perPage + i}>
+                  {renderItem(item, { dragged })}
+                </div>
+              ))}
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="team-carousel-controls">
-        <button className="team-carousel-arrow" onClick={() => paginate(-1)} aria-label="Previous team member">
+      <div className="carousel-controls">
+        <button className="carousel-arrow" onClick={() => paginate(-1)} aria-label={`Previous ${unitLabel}`}>
           <ChevronLeft size={20} />
         </button>
-        <div className="team-carousel-dots" role="tablist" aria-label="Choose team member">
-          {members.map((m, i) => (
+        <div className="carousel-dots" role="tablist" aria-label={ariaLabel}>
+          {Array.from({ length: pageCount }, (_, i) => (
             <button
               key={i}
-              className={`team-carousel-dot ${i === index ? 'active' : ''}`}
-              aria-label={`View ${m.name}`}
-              aria-current={i === index ? 'true' : undefined}
+              className={`carousel-dot ${i === page ? 'active' : ''}`}
+              aria-label={getDotLabel(i, pageCount)}
+              aria-current={i === page ? 'true' : undefined}
               onClick={() => goTo(i)}
             />
           ))}
         </div>
-        <button className="team-carousel-arrow" onClick={() => paginate(1)} aria-label="Next team member">
+        <button className="carousel-arrow" onClick={() => paginate(1)} aria-label={`Next ${unitLabel}`}>
           <ChevronRight size={20} />
         </button>
       </div>
-      <div className="team-carousel-count" aria-live="polite">{index + 1} / {total}</div>
+      <div className="carousel-count" aria-live="polite">{page + 1} / {pageCount}</div>
     </div>
   )
 }
@@ -1165,7 +1313,32 @@ function TeamSection() {
       </Reveal>
 
       {isMobile ? (
-        <TeamCarousel members={TEAM} onCardTap={handleCardClick} />
+        <Carousel
+          items={TEAM}
+          perPage={1}
+          ariaLabel="Team members"
+          unitLabel="team member"
+          getDotLabel={(i) => `View ${TEAM[i].name}`}
+          getSlideLabel={(i, count) => `${i + 1} of ${count}: ${TEAM[i].name}`}
+          renderItem={(member, { dragged }) => (
+            <div
+              className="team-card"
+              onClick={() => {
+                if (dragged.current) { dragged.current = false; return }
+                handleCardClick(member)
+              }}
+            >
+              <div className="team-card-photo">
+                <MemberPhoto member={member} sizes="90vw" />
+              </div>
+              <div className="team-card-info">
+                <h3 className="team-card-name">{member.name}</h3>
+                <span className="team-card-role">{member.role}</span>
+                <p className="team-card-bio">{member.bio}</p>
+              </div>
+            </div>
+          )}
+        />
       ) : (
         <>
           <Reveal className="team-founder">
