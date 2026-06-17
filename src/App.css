@@ -1197,108 +1197,6 @@
   color: var(--accent);
 }
 
-/* ── Portfolio peek carousel (center-focused, neighbors clipped at edges) ── */
-.work-peek {
-  --peek-h: 440px;
-  max-width: 1280px;
-  margin: 0 auto;
-  outline: none;
-}
-.work-peek:focus-visible {
-  outline: 1px solid var(--border-hover);
-  outline-offset: 10px;
-}
-.work-peek-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-}
-.work-peek-count {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--text-secondary);
-}
-.work-peek-count b { color: var(--accent); font-weight: 700; }
-.work-peek-count i { font-style: normal; margin: 0 4px; color: var(--text-muted); }
-.work-peek-arrows {
-  display: flex;
-  gap: 14px;
-}
-.work-peek-arrow {
-  width: 58px;
-  height: 58px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid var(--accent-strong);
-  background: transparent;
-  color: var(--accent);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.2s;
-}
-.work-peek-arrow:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #05060a;
-  box-shadow: 0 0 28px rgba(145, 202, 232, 0.25);
-}
-.work-peek-arrow:active { transform: scale(0.93); }
-.work-peek-viewport {
-  position: relative;
-  overflow: hidden;
-  height: calc(var(--peek-h) + 80px); /* vertical room for the active glow */
-}
-.work-peek-track {
-  position: absolute;
-  inset: 0;
-  cursor: grab;
-}
-.work-peek-track:active { cursor: grabbing; }
-.work-peek-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  height: var(--peek-h);
-  margin-top: calc(var(--peek-h) / -2);
-  will-change: transform, opacity;
-}
-.work-peek-card .work-card,
-.work-peek-card .work-card-inner,
-.work-peek-card .work-card-cta {
-  width: 100%;
-  height: var(--peek-h);
-}
-.work-peek-card .work-card-inner,
-.work-peek-card .work-card-cta {
-  transition: border-color 0.4s, box-shadow 0.4s;
-}
-/* Dim veil over the peeking neighbours (opacity/scale handled by framer). */
-.work-peek-card:not(.is-active)::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(5, 6, 10, 0.45);
-  pointer-events: none;
-  z-index: 6;
-}
-/* Active card: accent border + soft outer glow ring. */
-.work-peek-card.is-active .work-card-inner,
-.work-peek-card.is-active .work-card-cta {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-strong), 0 0 38px rgba(145, 202, 232, 0.22),
-    0 24px 60px rgba(0, 0, 0, 0.5);
-}
-
-@media (max-width: 900px) {
-  .work-peek { --peek-h: 360px; }
-  .work-peek-arrow { width: 50px; height: 50px; }
-}
-
 @media (max-width: 900px) {
   .work-section { padding: 80px 24px; }
   .work-header {
@@ -1498,6 +1396,11 @@
 .carousel-cell video {
   -webkit-user-drag: none;
   user-select: none;
+}
+/* Portfolio: keep the 3-up row at the same width the grid used. */
+.work-carousel-page {
+  max-width: 1200px;
+  margin-inline: auto;
 }
 .carousel-controls {
   display: flex;

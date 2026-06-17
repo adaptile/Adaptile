@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, X, Send, ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowUpRight, X, Send, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router'
 import Picture from './Picture.jsx'
 import LazyVideo from './LazyVideo.jsx'
@@ -881,133 +881,21 @@ function About() {
 }
 
 /* ─────────────────────────────────────
-   WORK SECTION (center-focus "peek" carousel)
+   WORK SECTION (paged carousel)
    ───────────────────────────────────── */
-const wrapIndex = (n, m) => ((n % m) + m) % m
-
-// One large centered card with the previous/next cards peeking in from the
-// edges (clipped by the viewport). Advances one card at a time, loops, and
-// mounts only a small window around the active card so offscreen project media
-// isn't fetched up front. Cards are absolutely positioned and each animates to
-// its own offset, so the loop window can add/remove edge cards without reflow.
-function WorkPeekCarousel({ items, renderItem }) {
-  const reduce = useReducedMotion()
-  const viewportRef = useRef(null)
-  const [vw, setVw] = useState(0)
-  const [isMobile, setIsMobile] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth <= 768,
+function WorkSection() {
+  // 3 cards per slide on desktop, 1 on phones — same 768px breakpoint as Team.
+  const [perPage, setPerPage] = useState(
+    () => (typeof window !== 'undefined' && window.innerWidth <= 768 ? 1 : 3),
   )
-  // pos is an unbounded counter; the active project is pos mod N.
-  const [pos, setPos] = useState(0)
-  const dragged = useRef(false)
-  const N = items.length
-
   useEffect(() => {
-    const el = viewportRef.current
-    if (!el) return
-    const ro = new ResizeObserver((entries) => setVw(entries[0].contentRect.width))
-    ro.observe(el)
-    setVw(el.clientWidth)
-    const onResize = () => setIsMobile(window.innerWidth <= 768)
-    onResize()
-    window.addEventListener('resize', onResize)
-    return () => { ro.disconnect(); window.removeEventListener('resize', onResize) }
+    const check = () => setPerPage(window.innerWidth <= 768 ? 1 : 3)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
-  const frac = isMobile ? 0.78 : 0.62 // active card width as a fraction of viewport
-  const gap = isMobile ? 10 : 28
-  const cardW = Math.round(vw * frac)
-  const step = cardW + gap
-  const active = wrapIndex(pos, N)
-
-  const paginate = (dir) => setPos((p) => p + dir)
-
-  const transition = reduce
-    ? { duration: 0 }
-    : { type: 'spring', stiffness: 300, damping: 34, opacity: { duration: 0.25 } }
-
-  // Window of cards around the active one: 0 = center, ±1 = visible peeks,
-  // ±2 = on-deck (kept mounted so they slide/fade in smoothly).
-  const WINDOW = [-2, -1, 0, 1, 2]
-
-  return (
-    <div
-      className="work-peek"
-      tabIndex={0}
-      role="group"
-      aria-roledescription="carousel"
-      aria-label="Selected work"
-      onKeyDown={(e) => {
-        if (e.key === 'ArrowRight') { e.preventDefault(); paginate(1) }
-        else if (e.key === 'ArrowLeft') { e.preventDefault(); paginate(-1) }
-      }}
-    >
-      <div className="work-peek-controls">
-        <span className="work-peek-count" aria-live="polite">
-          <b>{String(active + 1).padStart(2, '0')}</b><i>/</i>{String(N).padStart(2, '0')}
-        </span>
-        <div className="work-peek-arrows">
-          <button className="work-peek-arrow" aria-label="Previous project" onClick={() => paginate(-1)}>
-            <ArrowLeft size={22} />
-          </button>
-          <button className="work-peek-arrow" aria-label="Next project" onClick={() => paginate(1)}>
-            <ArrowRight size={22} />
-          </button>
-        </div>
-      </div>
-
-      <div className="work-peek-viewport" ref={viewportRef}>
-        <motion.div
-          className="work-peek-track"
-          drag="x"
-          dragSnapToOrigin
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.16}
-          onDragStart={() => { dragged.current = false }}
-          onDragEnd={(e, info) => {
-            if (Math.abs(info.offset.x) > 8) dragged.current = true
-            const power = info.offset.x + info.velocity.x * 0.2
-            if (power <= -60) paginate(1)
-            else if (power >= 60) paginate(-1)
-          }}
-        >
-          <AnimatePresence initial={false}>
-            {vw > 0 && WINDOW.map((o) => {
-              const p = pos + o
-              const item = items[wrapIndex(p, N)]
-              const isActive = o === 0
-              return (
-                <motion.div
-                  key={p}
-                  className={`work-peek-card ${isActive ? 'is-active' : ''}`}
-                  style={{ width: cardW }}
-                  initial={false}
-                  animate={{
-                    x: o * step - cardW / 2,
-                    opacity: isActive ? 1 : Math.abs(o) === 1 ? 0.5 : 0,
-                    scale: isActive ? 1 : 0.94,
-                  }}
-                  exit={{ opacity: 0 }}
-                  transition={transition}
-                  aria-hidden={isActive ? undefined : true}
-                >
-                  {renderItem(item, {
-                    dragged,
-                    isActive,
-                    focus: () => paginate(o), // clicking a peek centers it
-                  })}
-                </motion.div>
-              )
-            })}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-    </div>
-  )
-}
-
-function WorkSection() {
-  // CTA card rides along as the final item in the rotation.
+  // CTA card rides along as the final item so it lands on the last slide.
   const items = [...PROJECTS, { cta: true, id: '__cta' }]
 
   return (
@@ -1025,18 +913,20 @@ function WorkSection() {
         </div>
       </Reveal>
 
-      <WorkPeekCarousel
+      <Carousel
         items={items}
-        renderItem={(project, { dragged, isActive, focus }) =>
+        perPage={perPage}
+        pageClassName="work-carousel-page"
+        ariaLabel="Selected work"
+        unitLabel="projects"
+        getDotLabel={(i, count) => `Go to projects, page ${i + 1} of ${count}`}
+        getSlideLabel={(i, count) => `Projects, page ${i + 1} of ${count}`}
+        renderItem={(project, { dragged }) =>
           project.cta ? (
             <a
               href="#contact"
               className="work-card-cta"
-              tabIndex={isActive ? undefined : -1}
-              onClick={(e) => {
-                if (dragged.current) { e.preventDefault(); dragged.current = false; return }
-                if (!isActive) { e.preventDefault(); focus() }
-              }}
+              onClick={(e) => { if (dragged.current) { e.preventDefault(); dragged.current = false } }}
             >
               <span className="work-cta-label">Your Brand Here?</span>
               <span className="work-cta-link">
@@ -1049,12 +939,8 @@ function WorkSection() {
                 to={`/work/${project.id}`}
                 className="work-card-inner"
                 draggable={false}
-                tabIndex={isActive ? undefined : -1}
-                // Swipe must not navigate; clicking a peeking card just centers it.
-                onClick={(e) => {
-                  if (dragged.current) { e.preventDefault(); dragged.current = false; return }
-                  if (!isActive) { e.preventDefault(); focus() }
-                }}
+                // A horizontal swipe must not navigate to the project page.
+                onClick={(e) => { if (dragged.current) { e.preventDefault(); dragged.current = false } }}
               >
                 {isVideo(project.thumbnail) ? (
                   <LazyVideo
@@ -1068,7 +954,7 @@ function WorkSection() {
                     src={project.thumbnail}
                     className="work-card-media"
                     alt={project.title}
-                    sizes="(max-width: 768px) 100vw, 60vw"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 )}
                 <div className="work-card-overlay" />
