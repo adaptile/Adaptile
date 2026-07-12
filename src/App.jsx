@@ -732,7 +732,7 @@ function Navbar() {
               >
                 Start a Project
               </a>
-              <p className="mobile-menu-tagline">Brand Architecture Studio — Dubai</p>
+              <p className="mobile-menu-tagline">Marketing Agency — Dubai</p>
             </motion.div>
           </motion.div>
         )}
@@ -1466,7 +1466,7 @@ function Footer() {
       <div className="footer-top">
         <div className="footer-brand">
           <span className="footer-logo">Adaptile</span>
-          <span className="footer-tagline">Brand Architecture Studio &middot; Dubai, UAE</span>
+          <span className="footer-tagline">Marketing Agency &middot; Dubai, UAE</span>
         </div>
         <div className="footer-links">
           <a href="#work">Work</a>
