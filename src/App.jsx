@@ -849,14 +849,14 @@ function About() {
             <span className="section-label">About</span>
             <h2 className="about-heading">
               Most businesses have the right product.<br />
-              Very few have the <em>right brand.</em>
+              Very few have the <em>RIGHT BRAND.</em>
             </h2>
           </div>
           <div className="about-right">
             <p className="about-text">
-              Adaptile was built by people with multiple decades of experience across branding, marketing, and content.
-              We specialize in putting businesses directly in front of the right audience through high-level branding
-              content, and social media management that ensures what they see converts. 
+              Adaptile was built by people with multiple decades of experience working with massive projects.
+              We measure our success by yours. Through high level branding, content, and social media management 
+              we make sure your business gets in front of your target audience and converts.
             </p>
             <p className="about-text-secondary">
               From Jason Derulo to emerging Web3 protocols — we transform ambitious
