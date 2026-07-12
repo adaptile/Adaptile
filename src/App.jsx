@@ -847,16 +847,15 @@ function About() {
         <div className="about-inner">
           <div className="about-left">
             <span className="section-label">About</span>
-            <h2 className="about-heading">
-              We measure our success<br />
-              <em>by yours.</em>
-            </h2>
+              <h2 className="about-heading">
+                We measure our success <em>by yours.</em>
+              </h2>
           </div>
           <div className="about-right">
             <p className="about-text">
-              After multiple decades of experience working with massive projects, we have come to one conclusion.
-              Most businesses have the right product but very few have the right brand.We make sure yours is one of them 
-              through high level branding, content, and social media management that puts you directly in front of the right audience and converts.
+              After multiple decades of combined experience working with massive projects, we have learned one thing.
+              Most have the right product, but very few have the right brand. We make sure yours is one of them 
+              through high-level branding, content, and social media management that converts.
             </p>
             <p className="about-text-secondary">
               From Jason Derulo to emerging Web3 protocols — we transform ambitious
