@@ -769,10 +769,9 @@ function Hero() {
 
         <div className="hero-anim" style={{ animationDelay: '0.4s' }}>
         <p className="hero-sub">
-          Markets are more competitive than ever. And customers have more options
-          than ever. Most businesses have great products but weak branding holds
-          them back. We've done it for celebrities, global crypto projects, and established businesses.
-          You need to stand out to win. 
+          Markets are more competitive than ever, and weak branding is what separates 
+          businesses that win from ones that don't. We've done it for celebrities,
+          global crypto projects, and established businesses. You need to stand out to win. 
         </p>
         </div>
 
