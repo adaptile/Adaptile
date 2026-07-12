@@ -769,9 +769,10 @@ function Hero() {
 
         <div className="hero-anim" style={{ animationDelay: '0.4s' }}>
         <p className="hero-sub">
-          We design brands that people remember and systems that actually convert.
-          Celebrity partnerships, Web3 launches, full-scale campaigns. If it
-          needs to look sharp and move fast, that's where we come in.
+          Markets are more competitive than ever. And customers have more options
+          than ever. Most businesses have great products but weak branding holds
+          them back. We've done it for celebrities, global crypto projects, and established businesses.
+          You need to stand out to win. 
         </p>
         </div>
 
