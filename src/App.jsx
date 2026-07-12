@@ -759,10 +759,10 @@ function Hero() {
         <div className="hero-anim" style={{ animationDelay: '0.25s' }}>
         <div className="hero-headline">
           <div className="hero-headline-line">
-            <span>Where Strategy</span>
+            <span>Weak Branding</span>
           </div>
           <div className="hero-headline-line">
-            <span>Meets <em>Soul</em></span>
+            <span>is No Longer an <em>Option</em></span>
           </div>
         </div>
         </div>
