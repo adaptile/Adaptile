@@ -750,7 +750,7 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-anim" style={{ animationDelay: '0.1s' }}>
         <div className="hero-eyebrow">
-          <span className="hero-eyebrow-label">Brand Architecture Studio</span>
+          <span className="hero-eyebrow-label">Marketing Agency</span>
           <span className="hero-eyebrow-divider" />
           <span className="hero-eyebrow-location">Dubai</span>
         </div>
