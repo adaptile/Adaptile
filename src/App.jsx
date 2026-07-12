@@ -848,7 +848,7 @@ function About() {
           <div className="about-left">
             <span className="section-label">About</span>
               <h2 className="about-heading">
-                We measure our success <em>by yours.</em>
+                We measure our success <em>BY YOURS.</em>
               </h2>
           </div>
           <div className="about-right">
