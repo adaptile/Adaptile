@@ -848,15 +848,15 @@ function About() {
           <div className="about-left">
             <span className="section-label">About</span>
             <h2 className="about-heading">
-              We're not a design agency.<br />
-              We're <em>brand architects.</em>
+              Most businesses have the right product.<br />
+              Very few have the <em>right brand.</em>
             </h2>
           </div>
           <div className="about-right">
             <p className="about-text">
-              Adaptile engineers brand systems that don't just look good — they perform.
-              We build the visual infrastructure behind companies that dominate feeds,
-              close deals, and scale without losing identity.
+              Adaptile was built by people with multiple decades of experience across branding, marketing, and content.
+              We specialize in putting businesses directly in front of the right audience through high-level branding
+              content, and social media management that ensures what they see converts. 
             </p>
             <p className="about-text-secondary">
               From Jason Derulo to emerging Web3 protocols — we transform ambitious
