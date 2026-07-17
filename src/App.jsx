@@ -904,8 +904,8 @@ function WorkSection() {
             <h2 className="section-title">What We've Built</h2>
           </div>
           <p className="work-header-desc">
-            A dedicated lead on every project. A clear roadmap. And KPIs
-            we are accountable for hitting with weekly reporting.
+            A dedicated lead on every project. A clear roadmap. And weekly KPIs
+            we are accountable for hitting.
           </p>
         </div>
       </Reveal>
