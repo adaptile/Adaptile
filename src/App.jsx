@@ -1559,6 +1559,7 @@ export default function App() {
       <About />
       <div className="section-divider" />
       <WorkSection />
+      <HowWeWork />
       <div className="section-divider" />
       <TeamSection />
       <Services />
