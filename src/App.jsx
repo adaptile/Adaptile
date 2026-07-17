@@ -1453,6 +1453,61 @@ function ContactSection() {
     </section>
   )
 }
+/* ─────────────────────────────────────
+   HOWWEWORK
+   ───────────────────────────────────── */
+function HowWeWork() {
+  const steps = [
+    {
+      num: '01',
+      title: 'Diagnose',
+      desc: 'Audit the market, narrative, funnel, and current channel performance to find the actual constraint.',
+    },
+    {
+      num: '02',
+      title: 'Plan',
+      desc: 'Build the KPI tree, channel roles, campaign sequence, and 90-day execution roadmap.',
+    },
+    {
+      num: '03',
+      title: 'Execute',
+      desc: 'Deploy strategy, content, community, creative, and paid distribution as one operating team.',
+    },
+    {
+      num: '04',
+      title: 'Measure',
+      desc: 'Read leading signals weekly, reallocate effort, and document what compounds.',
+    },
+  ]
+
+  return (
+    <section className="how-we-work-section">
+      <Reveal>
+        <div className="how-we-work-header">
+          <div className="how-we-work-header-left">
+            <span className="section-label">Our Process</span>
+            <h2 className="how-we-work-title">How We Work</h2>
+          </div>
+          <p className="how-we-work-sub">
+            A dedicated lead on every project, a clear roadmap, and KPIs we are accountable for hitting.
+          </p>
+        </div>
+      </Reveal>
+
+      <div className="how-we-work-grid">
+        {steps.map((step, i) => (
+          <Reveal key={i} delay={i * 0.08}>
+            <div className="how-we-work-card">
+              <span className="how-we-work-num">{step.num}</span>
+              <h3 className="how-we-work-step-title">{step.title}</h3>
+              <p className="how-we-work-step-desc">{step.desc}</p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  )
+}
 
 /* ─────────────────────────────────────
    FOOTER
