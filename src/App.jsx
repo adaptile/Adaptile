@@ -901,11 +901,11 @@ function WorkSection() {
         <div className="work-header">
           <div className="work-header-left">
             <span className="section-label">Portfolio</span>
-            <h2 className="section-title">Selected Work</h2>
+            <h2 className="section-title">What We've Built</h2>
           </div>
           <p className="work-header-desc">
-            From Solana meme-coin architecture to premium brand identity —
-            every project built to capture and convert.
+            A dedicated lead on every project. A clear roadmap. And KPIs
+            we are accountable for hitting with weekly reporting.
           </p>
         </div>
       </Reveal>
