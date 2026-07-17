@@ -609,7 +609,7 @@ function AnimatedCounter({ value }) {
         obs.disconnect()
         const num = parseInt(value.replace(/[^\d]/g, ''))
         const suffix = value.replace(/[\d]/g, '')
-        const duration = 1800
+        const duration = 3500
         const t0 = performance.now()
         function step(now) {
           const p = Math.min((now - t0) / duration, 1)
