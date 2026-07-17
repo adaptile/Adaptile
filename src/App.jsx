@@ -770,8 +770,7 @@ function Hero() {
         <div className="hero-anim" style={{ animationDelay: '0.4s' }}>
         <p className="hero-sub">
           Markets are more competitive than ever, and weak branding is what separates 
-          businesses that win from ones that don't. We've done it for celebrities,
-          global crypto projects, and established businesses. You need to stand out to win. 
+          businesses that win from ones that don't. 
         </p>
         </div>
 
@@ -855,11 +854,10 @@ function About() {
             <p className="about-text">
               After multiple decades of combined experience working with massive projects, we have learned one thing.
               Most have the right product, but very few have the right brand. We make sure yours is one of them 
-              through high-level branding, content, and social media management that converts.
+              through high-level content and social media management that converts.
             </p>
             <p className="about-text-secondary">
-              From Jason Derulo to emerging Web3 protocols — we transform ambitious
-              visions into market-dominating identities.
+              Everything from Web3 projects, celebrities, major news outlets, and more. 
             </p>
           </div>
         </div>
