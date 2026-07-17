@@ -2409,3 +2409,128 @@
   .team-card-name { font-size: 18px; }
   .team-card-bio { font-size: 12px; }
 }
+
+/* Howwework */
+.how-we-work-section {
+  padding: 140px 56px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+.how-we-work-header {
+  max-width: 1200px;
+  margin: 0 auto 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+}
+
+.how-we-work-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.how-we-work-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.how-we-work-sub {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  align-self: end;
+}
+
+.how-we-work-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--border);
+}
+
+.how-we-work-card {
+  padding: 48px 36px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.how-we-work-card:last-child {
+  border-right: none;
+}
+
+.how-we-work-num {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.how-we-work-step-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.how-we-work-step-desc {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+  .how-we-work-section {
+    padding: 100px 24px 80px;
+  }
+
+  .how-we-work-header {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .how-we-work-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .how-we-work-card {
+    padding: 32px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .how-we-work-card:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+
+  .how-we-work-card:nth-child(even) {
+    border-right: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .how-we-work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .how-we-work-card {
+    border-right: none;
+  }
+}
