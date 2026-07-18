@@ -1413,12 +1413,11 @@ function ContactSection() {
               >
                 <span className="section-label">Get in Touch</span>
                 <h2 className="contact-headline">
-                  Ready to Build<br />
-                  Something <em>Remarkable?</em>
+                  Let's Build Your<br /> <em>Brand</em>
                 </h2>
                 <p className="contact-sub">
-                  We work with founders, artists, and protocols that refuse to be average.
-                  If you're ready to dominate your space, let's talk.
+                  Fill out the form and one of our team members will get back to you personally within 24 hours.
+                  We have helped businesses dominate their space no matter the industry and we can do the same for yours.
                 </p>
 
                 <form className="contact-form" onSubmit={handleSubmit}>
