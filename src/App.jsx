@@ -1284,8 +1284,7 @@ function Services() {
           <span className="section-label">What We Do</span>
           <h2 className="section-title">Services</h2>
           <p className="services-sub">
-            A focused suite of services designed for one thing:
-            making your brand impossible to ignore.
+            Our goal is simple. Put your brand in front of the right people and make sure it converts.
           </p>
         </div>
       </Reveal>
