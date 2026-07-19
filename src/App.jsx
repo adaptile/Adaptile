@@ -432,7 +432,8 @@ const HERO_FEATURES = [
 const SERVICES = [
   {
     num: '01', title: 'Brand Identity & Strategy',
-    desc: 'Complete visual identity systems — from logo architecture to full brand guidelines. We build visual languages that command recognition and force attention.',
+    desc: 'Your brand is the first thing a potential customer sees and in most cases it determines whether they stay or move on. We build complete brand identities from the ground up, logo, visual language, typography, color, guidelines, and positioning, everything a business needs to look credible, professional, and worth paying for. 
+',
     deliverables: [
       'Logo & mark systems',
       'Typography & color',
@@ -441,7 +442,7 @@ const SERVICES = [
       'Social & pitch templates',
       'Strategic positioning',
     ],
-    outcome: 'Typical engagement: 4–6 weeks · From discovery to full guideline handoff.',
+    outcome: 'Most clients are fully rebranded and market-ready within 4 to 6 weeks ',
   },
   {
     num: '02', title: 'Content & Creative Production',
