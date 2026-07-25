@@ -432,7 +432,7 @@ const HERO_FEATURES = [
 const SERVICES = [
   {
     num: '01', title: 'Brand Identity & Strategy',
-    desc: 'Your brand is the first thing a potential customer sees and in most cases it determines whether they stay or move on. We build complete brand identities from the ground up, logo, visual language, typography, color, guidelines, and positioning, everything a business needs to look credible, professional, and worth paying for. 
+    desc: 'Your brand is the first thing a potential customer sees, and in most cases it determines whether they stay or move on. We build complete brand identities from the ground up, logo, visual language, typography, color, guidelines, and positioning, everything a business needs to look credible, professional, and worth paying for. 
 ',
     deliverables: [
       'Logo & mark systems',
