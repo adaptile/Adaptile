@@ -2043,6 +2043,7 @@
   padding: 120px 56px;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 
 .contact-inner {
