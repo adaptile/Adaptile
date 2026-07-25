@@ -432,7 +432,7 @@ const HERO_FEATURES = [
 const SERVICES = [
   {
     num: '01', title: 'Brand Identity & Strategy',
-    desc: 'Your brand is the first thing a potential customer sees, and in most cases it determines whether they stay or move on. We build complete brand identities from the ground up, logo, visual language, typography, color, guidelines, and positioning, everything a business needs to look credible, professional, and worth paying for. ',
+    desc: 'Your brand is the first thing a potential customer sees and in most cases it determines whether they stay or move on. We build complete brand identities from the ground up so your business looks credible, professional, and worth paying for. ',
     deliverables: [
       'Logo & mark systems',
       'Typography & color',
@@ -445,7 +445,7 @@ const SERVICES = [
   },
   {
     num: '02', title: 'Content & Creative Production',
-    desc: 'High-impact visual content for social, web, and beyond. Video, motion graphics, 3D renders, and photography that stops the scroll and drives engagement.',
+    desc: 'We produce high quality video, motion graphics, 3D renders, and creative assets built specifically for the platforms your audience is on. Content that stops the scroll and drives engagement.',
     deliverables: [
       'Short-form video & edits',
       'Motion graphics & animation',
@@ -454,10 +454,10 @@ const SERVICES = [
       'Ad creative & social sets',
       'Launch content systems',
     ],
-    outcome: 'Typical engagement: 2–8 weeks · Single launches or always-on content retainers.',
+    outcome: 'Most clients are producing and publishing high level content within 2 to 8 weeks, either as a one time launch or an ongoing retainer',
   },
   {
-    num: '03', title: 'Web3 & Crypto Branding',
+    num: '03', title: 'Web3 Launch & Growth',
     desc: 'Meme coin launches, NFT collections, DeFi protocols, and token ecosystems. We understand the culture and build brands that dominate the timeline.',
     deliverables: [
       'Token & meme coin launches',
@@ -467,11 +467,11 @@ const SERVICES = [
       'Character & mascot work',
       'Launch-day campaigns',
     ],
-    outcome: 'Typical engagement: 3–6 weeks · From zero to launch-ready brand + assets.',
+    outcome: 'Most clients go from zero to a fully launch ready brand and asset suite within 3 to 6 weeks',
   },
   {
     num: '04', title: 'Creative Direction & Consulting',
-    desc: 'Strategic creative leadership for campaigns, launches, and brand evolution. We don\'t follow trends — we architect them.',
+    desc: 'We offer senior level creative direction and consulting for businesses that want expert eyes on their campaigns, launches, and brand strategy without the overhead of a full time hire',
     deliverables: [
       'Campaign direction',
       'Brand audit & repositioning',
@@ -480,7 +480,7 @@ const SERVICES = [
       'Fractional creative leadership',
       'Brand architecture',
     ],
-    outcome: 'Engagement model: project-based or monthly retainer · In-house creative embedded with your team.',
+    outcome: 'Available on a project basis or as an ongoing monthly retainer.',
   },
 ]
 
