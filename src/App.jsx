@@ -977,10 +977,10 @@ function WorkSection() {
    ───────────────────────────────────── */
 const TEAM = [
   { name: 'Yezen', role: 'Founder, CEO & Creative Director', bio: '10+ years across social media, brand strategy, and content — working with everyone from A-list celebrities to 8-figure businesses.' },
+  { name: 'Yehia', role: 'Marketing Director', photo: '/joshpfp.jpg', bio: '5+ years across private equity, finance, and marketing with hands-on experience in real estate, tourism, Web3, and management. Results-oriented and aggressive in approach, currently based in Tokyo.' },
   { name: 'Biellal', role: 'Social Media Manager', photo: '/biellal-pfp.jpg', bio: '10+ years running marketing across digital and traditional channels, from paid media to influencer partnerships and community growth.' },
   { name: 'Wahab', role: 'Lead Developer', photo: '/wahabpfp.jpg', bio: 'Full-stack engineer with 5+ years across startups and enterprise, building everything from web apps to blockchain infrastructure with over $10M in revenue delivered.' },
   { name: 'Finn', role: 'Digital Artist & Creative Developer', photo: '/finnspfp.jpg', bio: '15+ years as a digital artist and creative developer, covering everything from character design and animation to full-stack engineering.' },
-  { name: 'Yehia', role: 'Marketing Director', photo: '/joshpfp.jpg', bio: '5+ years across private equity, finance, and marketing with hands-on experience in real estate, tourism, Web3, and management. Results-oriented and aggressive marketing style in approach, currently based in Tokyo working directly with clients on growth strategy and execution.' },
   { name: 'Issy', role: 'Project Manager', photo: '/issypfp.jpg', bio: '5+ years keeping complex creative projects on time and on scope, coordinating between designers, developers, and clients.' },
   { name: 'Hussien', role: 'Developer', photo: '/hussienpfp.jpg', bio: 'Full-stack engineer with 5+ years building high-performance web applications, from front-end interfaces to complex backend services in Python, Java, and C++.' },
   { name: 'Julian', role: 'Senior Illustrator', photo: '/sampfp.jpg', bio: '10+ years as a visual artist with roots in tattoo artistry and traditional illustration, bringing a hand-drawn precision to digital brand work that you can\'t replicate with software alone.' },
