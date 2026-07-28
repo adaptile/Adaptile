@@ -4,9 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router'
 import './index.css'
 import App from './App.jsx'
 
-// Route-split: the project detail page (and its motion-driven gallery) is only
-// needed at /work/* — keep it out of the homepage's initial bundle.
 const ProjectDetail = lazy(() => import('./ProjectDetail.jsx'))
+const CaseStudy = lazy(() => import('./CaseStudy.jsx'))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -18,6 +17,14 @@ createRoot(document.getElementById('root')).render(
           element={
             <Suspense fallback={<div style={{ minHeight: '100vh', background: '#050508' }} />}>
               <ProjectDetail />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/case-study/watcherguru"
+          element={
+            <Suspense fallback={<div style={{ minHeight: '100vh', background: '#050508' }} />}>
+              <CaseStudy />
             </Suspense>
           }
         />
