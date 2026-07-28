@@ -1506,6 +1506,65 @@ function HowWeWork() {
     </section>
   )
 }
+/* ─────────────────────────────────────
+   CASESTUDY
+   ───────────────────────────────────── */
+
+function CaseStudyTeaser() {
+  return (
+    <section className="cs-teaser-section">
+      <div className="cs-teaser-inner">
+        <div className="cs-teaser-left">
+          <div className="cs-teaser-client">
+            <img src="/watcherguru_logo.jfif" alt="WatcherGuru" className="cs-teaser-logo" />
+            <div>
+              <span className="section-label">Case Study</span>
+              <p className="cs-teaser-client-name">WatcherGuru</p>
+            </div>
+          </div>
+          <h2 className="cs-teaser-headline">
+            2,100% More Views.<br /><em>30 Days.</em>
+          </h2>
+          <div className="cs-teaser-stats">
+            {[
+              { val: '48.2M', label: 'Views' },
+              { val: '32K', label: 'Followers' },
+              { val: '17M', label: 'Reached' },
+            ].map((s, i) => (
+              <div key={i} className="cs-teaser-stat">
+                <span className="cs-teaser-stat-val">{s.val}</span>
+                <span className="cs-teaser-stat-label">{s.label}</span>
+              </div>
+            ))}
+          </div>
+          <a href="/case-study/watcherguru" className="cs-teaser-cta">
+            See How We Did It <ArrowUpRight size={16} />
+          </a>
+        </div>
+
+        <div className="cs-teaser-right">
+          <div className="cs-teaser-panel">
+            <div className="cs-teaser-panel-label">Before vs After — 30 Days</div>
+            {[
+              { label: 'Total Views', before: '2.1M', after: '48.2M' },
+              { label: 'Followers Gained', before: '1,960', after: '32,000' },
+              { label: 'Accounts Reached', before: '367K', after: '17M' },
+            ].map((r, i) => (
+              <div key={i} className="cs-teaser-row">
+                <span className="cs-teaser-row-label">{r.label}</span>
+                <span className="cs-teaser-row-vals">
+                  <span className="cs-before">{r.before}</span>
+                  <span className="cs-arrow">→</span>
+                  <span className="cs-after">{r.after}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 /* ─────────────────────────────────────
    FOOTER
