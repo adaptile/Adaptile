@@ -60,7 +60,7 @@ export default function CaseStudy() {
         </p>
       </div>
 
-      <div style={{ maxWidth: '900px', margin: '0 auto 80px', padding: '0 56px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: '#1E2836', border: '1px solid #1E2836', borderRadius: '10px', overflow: 'hidden', boxSizing: 'border-box' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto 80px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: '#1E2836', border: '1px solid #1E2836', borderRadius: '10px', overflow: 'hidden' }}>
         {[
           { val: '48.2M', label: 'Total Views', sub: 'up from 2.1M' },
           { val: '32,000', label: 'Followers Gained', sub: 'up from 1,960' },
