@@ -1616,6 +1616,7 @@ export default function App() {
       <About />
       <div className="section-divider" />
       <WorkSection />
+      <CaseStudyTeaser />
       <HowWeWork />
       <div className="section-divider" />
       <TeamSection />
